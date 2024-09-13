@@ -38,17 +38,21 @@ class Message:
                     options = command_info.get('options', [])
                     # print(f"Command options: {options}")
                     # 按照顺序存储选项的值
-                    for option in options:
-                        option_value = option.get('value')
-                        self.command_option_values.append(option_value)
+                    if options:
+                        for option in options:
+                            option_value = option.get('value')
+                            self.command_option_values.append(option_value)
+
+
                     # 调试信息
                     # print(f"Command option values: {self.command_option_values}")
                     return  # 成功解析命令，退出函数
             except json.JSONDecodeError as e:
                 print(f"JSON decode error in parse_addition: {e}")  # 如果解析失败，打印错误
+        self.parse_command_from_content()
 
         # 如果 addition 字段没有命令信息，尝试从消息内容解析
-        self.parse_command_from_content()
+
 
     def parse_command_from_content(self):
         # 使用正则表达式匹配以 '/' 开头的命令
@@ -58,7 +62,9 @@ class Message:
             self.command = match.group(1)
             # 调试信息
             # print(f"Parsed command from content: {self.command}")
-            # 如果需要解析参数，可以在这里添加逻辑
+            option_values = self.content.lstrip(f"/{self.command}").strip()
+            if option_values:
+                self.command_option_values = option_values.split()
         else:
             pass
             # 调试信息
