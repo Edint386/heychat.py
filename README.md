@@ -13,7 +13,7 @@ Python小白不会用pypi，所以就手动下载下来然后把heychat文件夹
 
 ## 最简示例
 首先在 [小黑盒机器人开发平台](https://bot.xiaoheihe.cn/bots/manager) 创建一个机器人，然后获取到token，然后注册这条指令  
-![img.png](./asset/img.png)
+![img.png](img.png)
 
 ```python
 from heychat import Bot, Message
