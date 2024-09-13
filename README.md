@@ -33,7 +33,8 @@ bot.run()
 
     @bot.command('roll')
     async def hello(msg: Message,max_num):
-        # 使用参数功能请先前往小黑盒开发平台为注册指令添加变量
+        # 需先前往小黑盒开发平台为注册指令添加变量
+        # 如果没有添加变量单纯输入 /roll 100 也可解析
         max_num = int(max_num)
         await msg.reply(f"你掷出了{randint(1,max_num)}")
 
