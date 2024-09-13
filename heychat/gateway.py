@@ -144,6 +144,7 @@ class Gateway:
                     # 如果选项值不够，用 None 填充
                     if len(option_values) < num_params:
                         func_args.extend([None] * (num_params - len(option_values)))
+
                     # 调试信息
                     # print(f"Calling command function: {command_name} with args: {func_args[1:]}")
                     await command_func(*func_args)
