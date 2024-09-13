@@ -1,9 +1,6 @@
 # heychat.py
 Python SDK for HeyChat
 
-
-
-
 ## 安装
 ```shell
 pip install aiohttp
@@ -61,9 +58,5 @@ bot.run()
 抄的[khl.py](https://github.com/TWT233/khl.py)  
 用的ChatGPT  
 对了家人们有没有会pypi的教教我怎么发包（） 太蠢了整不明白
-
-
-
-
 
 
