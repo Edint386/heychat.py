@@ -72,6 +72,40 @@ bot.run()
 
 </details>
 <details>
+    <summary> ❌ MD构建</summary>
+    
+    import MDMessage
+    @bot.on_message()
+    async def on_message(msg: Message):
+
+        md_msg = MDMessage()
+        MDMessage.apeend("这是一段文字")
+        MDMessage.append(Element.TEXT("这也是一段文字"))
+        MDMessage.append(Element.MENTION("1234567890")) # @
+        MDMessage.append(Element.IMG("./file.png | BINARY | url"))
+
+        # or
+        
+        md_msg = MDMessage("这是一段文字",
+                            Element.TEXT("这也是一段文字"),
+                            Element.IMG("https://example.com/img.png"),
+                            Element.MENTION("1234567890"))
+        
+
+        await msg.reply(md_msg)
+
+</details>
+
+
+<details>
+    <summary> ❌ 支持更多指令变量类型</summary>
+
+    还没看示例，我也不知道长啥样
+
+</details>
+
+
+<details>
     <summary> ❌ 从type5转移至type50</summary>
 
     等什么时候官方把type5删了再写
