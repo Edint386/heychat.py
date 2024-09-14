@@ -1,95 +1,72 @@
-# api.py
 import functools
-import inspect
-import logging
-import re
-from collections import namedtuple
-from typing import Callable, Tuple
 import aiohttp
 
-# 抄的khl.py 但是还没完工
+class _Req:
+    def __init__(self, method, route, params):
+        self.method = method
+        self.route = route
+        self.params = params
 
-
-API_BASE_URL = 'https://chat.xiaoheihe.cn'
-
-_RE_ROUTE = re.compile(r'(?<!^)(?=[A-Z])')
-
-_Req = namedtuple('_Req', ['method', 'route', 'params'])
-
-
-def req(method: str, **http_fields):
-    """meta-decorator
-
-    :returns a decorator to fill func with boilerplate"""
-
-    def _method(func: Callable):
+def req(method: str, route: str, **http_fields):
+    """Decorator to create API request methods."""
+    def decorator(func):
         @functools.wraps(func)
-        def req_maker(*args, **kwargs) -> _Req:
-            route = _RE_ROUTE.sub('-', func.__qualname__).lower().replace('.', '/')
-
-            # dump args into kwargs
-            param_names = list(inspect.signature(func).parameters.keys())
-            for i, arg in enumerate(args):
-                kwargs[param_names[i].lstrip('_')] = arg
-
-            params = _merge_params(method, http_fields, kwargs)
-            return _Req(method, route, params)
-
-        return req_maker
-
-    return _method
-
+        def wrapper(*args, **kwargs):
+            # 获取函数参数名列表
+            param_names = func.__code__.co_varnames[:func.__code__.co_argcount]
+            # 将位置参数和关键字参数合并
+            params = dict(zip(param_names, args))
+            params.update(kwargs)
+            # 处理请求参数
+            payload = _merge_params(method, http_fields, params)
+            return _Req(method, route, payload)
+        return wrapper
+    return decorator
 
 def _merge_params(method: str, http_fields: dict, req_args: dict) -> dict:
+    payload_key = 'params'
     payload = req_args
-    payload_key = 'params'  # default payload_key: params=
     if method == 'POST':
-        payload_key = 'json'  # POST: in default json=
-
+        payload_key = 'json'
         content_type = http_fields.get('headers', {}).get('Content-Type', None)
         if content_type == 'multipart/form-data':
             payload_key, payload = _build_form_payload(req_args)
-            # headers of form-data req are delegated to aiohttp
             http_fields = _remove_content_type(http_fields)
-        elif content_type is not None:
-            raise ValueError(f'unrecognized Content-Type {content_type}')
-
+        elif content_type is not None and content_type != 'application/json':
+            raise ValueError(f'Unrecognized Content-Type {content_type}')
     params = {payload_key: payload}
     params.update(http_fields)
     return params
 
-
 def _remove_content_type(http_fields: dict) -> dict:
-    """in some situation, such as content-type=multipart/form-data,
-    content-type should be delegated to aiohttp to auto-generate,
-    thus content-type is required to be removed in http_fields
-    """
     if http_fields.get('headers', {}).get('Content-Type', None) is not None:
         http_fields = http_fields.copy()
         http_fields['headers'] = http_fields.get('headers', {}).copy()
         del http_fields['headers']['Content-Type']
     return http_fields
 
-
-def _build_form_payload(req_args: dict) -> Tuple[str, aiohttp.FormData]:
+def _build_form_payload(req_args: dict):
     data = aiohttp.FormData()
     for name, value in req_args.items():
         data.add_field(name, value)
     return 'data', data
 
-
-class Guild:
-    pass
-
-
-class Chatroom
-    pass
-
-
 class Message:
-    pass
+    """Class containing API methods."""
 
+    # 发送消息
+    @staticmethod
+    @req('POST', '/chatroom/v2/channel_msg/send')
+    def create(channel_id, msg, msg_type, room_id):
+        """Send a message to a channel."""
+        pass
 
-class APIEndpoints:
-    SEND_MESSAGE = '/chatroom/v2/channel_msg/send'
-    UPLOAD_MEDIA = '/upload'
+class File:
+    # 上传文件
+    @staticmethod
+    @req('POST', '/file/upload', headers={'Content-Type': 'multipart/form-data'})
+    def upload(file):
+        """Upload a file."""
+        pass
+
+    # 可以在这里添加更多的 API 方法
