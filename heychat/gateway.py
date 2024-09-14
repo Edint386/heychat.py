@@ -15,7 +15,6 @@ class Gateway:
         self.ws_url = 'wss://chat.xiaoheihe.cn/chatroom/ws/connect'
         self.session = aiohttp.ClientSession()
         self.headers = {
-            'Authorization': token,
             'token': token
         }
         self.params = {
