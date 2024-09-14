@@ -1,15 +1,17 @@
-# client.py
+import asyncio
 
 import aiohttp
 
+from ._types import MessageTypes
+from . import api
+
 class Client:
-    def __init__(self, token):
+    def __init__(self, token, gate):
         self.token = token
         self.base_url = 'https://chat.xiaoheihe.cn'
         self.session = aiohttp.ClientSession()
-        self.headers = {
-            'token': token
-        }
+        self.gate = gate
+        self.headers = {'token': token}
         self.params = {
             'client_type': 'heybox_chat',
             'x_client_type': 'web',
@@ -20,15 +22,8 @@ class Client:
             'chat_version': '1.24.5'
         }
 
-    async def send(self, target, content, type):
-        url = f'{self.base_url}/chatroom/v2/channel_msg/send'
-        data = {
-            'channel_id': target.id,
-            'msg': content,
-            'msg_type': type,
-            'room_id': target.guild_id
-        }
-        await self.requestor('POST', 'send', json=data)
+    async def send(self, target, content, msg_type=MessageTypes.MD_WITH_MENTION):
+        return await self.gate.exec_req(api.Message.create(target.id, content, msg_type.value, target.guild_id))
 
     async def upload(self, file):
         """
@@ -48,3 +43,6 @@ class Client:
         if responses.get("status") == "failed":
             raise Exception(responses.get('msg'))
         return responses
+
+    async def start(self):
+        await asyncio.gather(self.gate.run())
