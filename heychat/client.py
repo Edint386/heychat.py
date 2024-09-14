@@ -8,7 +8,6 @@ class Client:
         self.base_url = 'https://chat.xiaoheihe.cn'
         self.session = aiohttp.ClientSession()
         self.headers = {
-            'Authorization': token,
             'token': token
         }
         self.params = {
@@ -29,15 +28,23 @@ class Client:
             'msg_type': type,
             'room_id': target.guild_id
         }
-        async with self.session.post(url, headers=self.headers, params=self.params, json=data) as resp:
-            return await resp.json()
+        await self.requestor('POST', 'send', json=data)
 
-    async def upload(self, file_or_binary):
-        url = 'https://chat-upload.xiaoheihe.cn/upload'
+    async def upload(self, file):
+        """
+        :param file: file path or binary data
+        """
         data = aiohttp.FormData()
-        if isinstance(file_or_binary, str):
-            data.add_field('file', open(file_or_binary, 'rb'))
+        if isinstance(file, str):
+            data.add_field('file', open(file, 'rb'))
         else:
-            data.add_field('file', file_or_binary)
-        async with self.session.post(url, headers=self.headers, params=self.params, data=data) as resp:
-            return await resp.json()
+            data.add_field('file', file)
+        await self.requestor('POST', 'upload', data=data)
+
+    async def requestor(self, method, endpoint, **kwargs):
+        url = f'{self.base_url}/{endpoint}'
+        async with self.session.request(method, url, headers=self.headers, params=self.params, **kwargs) as resp:
+            responses = await resp.json()
+        if responses.get("status") == "failed":
+            raise Exception(responses.get('msg'))
+        return responses
