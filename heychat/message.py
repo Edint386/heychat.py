@@ -9,7 +9,7 @@ class Message:
     def __init__(self, data, bot):
         self.id = data.get('msg_id')
         self.content = data.get('msg')
-        self.author = User(data)
+        self.author = User(data.get("user_info"))
         self.ctx = Context(data)
         self.bot = bot
         self.msg_timestamp = data.get('send_time')
@@ -49,10 +49,10 @@ class Message:
                     return  # 成功解析命令，退出函数
             except json.JSONDecodeError as e:
                 print(f"JSON decode error in parse_addition: {e}")  # 如果解析失败，打印错误
-        self.parse_command_from_content()
+
 
         # 如果 addition 字段没有命令信息，尝试从消息内容解析
-
+        self.parse_command_from_content()
 
     def parse_command_from_content(self):
         # 使用正则表达式匹配以 '/' 开头的命令
