@@ -41,7 +41,42 @@ bot.run()
     bot.run()
 
 </details>
+<details>
+    <summary> ✅ 获取基础信息</summary>
 
+    from heychat import Bot, Message
+
+    bot = Bot('your_token')
+
+    @bot.on_message()
+    async def on_message(msg: Message):
+        # 用户
+        print(msg.author.username) # 用户名
+        print(msg.author.nickname) # 房间昵称
+        print(msg.author.id)       # 用户ID
+    
+        # 消息
+        print(msg.content)         # 消息内容
+        print(msg.msg_timestamp)   # 消息时间戳
+        
+        # 房间
+        print(msg.ctx.guild.id)    # 房间ID
+        print(msg.ctx.guild.name)  # 房间名
+        
+        # 频道
+        print(msg.ctx.channel.id)  # 频道ID
+        print(msg.ctx.channel.name)# 频道名
+        
+
+    bot.run()
+
+</details>
+<details>
+    <summary> ❌ 从type5转移至type50</summary>
+
+    等什么时候官方把type5删了再写
+
+</details>
 <details>
     <summary> ❌ 事件处理</summary>
 
