@@ -11,8 +11,8 @@ from .context import Context
 from ._types import MessageTypes, EventTypes, ChannelTypes
 from .event import Event
 from .role import Role
-from .api import APIEndpoints
-# 如果您有 receiver.py 和 requester.py 中的类或函数需要导出，可以在这里添加
+from . import api
+
 
 __all__ = [
     'Bot',
@@ -27,7 +27,5 @@ __all__ = [
     'EventTypes',
     'ChannelTypes',
     'Event',
-    'Role',
-    'APIEndpoints',
-    # 添加更多需要导出的名称
+    'Role'
 ]
