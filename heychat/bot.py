@@ -14,9 +14,13 @@ class Bot:
         self.event_handlers = {}
         self.loop = asyncio.get_event_loop()
 
-    def command(self, name):
+    def command(self, name, alias=None):
+        if alias is None:
+            alias = []
         def decorator(func):
-            self.commands[name] = func
+            all_names = [name] + alias
+            for cmd_name in all_names:
+                self.commands[cmd_name] = func
             return func
         return decorator
 
