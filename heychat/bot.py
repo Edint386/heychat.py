@@ -1,15 +1,13 @@
-# bot.py
-
 import asyncio
-from .client import Client
 from .gateway import Gateway
-from ._types import EventTypes
+from .client import Client
+from .receiver import Receiver
+
 
 class Bot:
     def __init__(self, token):
         self.token = token
-        self.client = Client(token)
-        self.gateway = Gateway(token, self)
+        self.client = Client(token,Gateway(token,Receiver(token,self)))
         self.commands = {}
         self.event_handlers = {}
         self.loop = asyncio.get_event_loop()
@@ -39,8 +37,7 @@ class Bot:
         return decorator
 
     async def start(self):
-        await self.gateway.connect()
-        # 等待一个永远不会完成的事件，保持程序运行
+        await self.client.start()
         await asyncio.Event().wait()
 
     def run(self):
