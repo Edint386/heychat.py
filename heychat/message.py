@@ -12,13 +12,13 @@ class Message:
     def __init__(self, data, bot):
 
         self.id = data.get('msg_id')
-        self.content = data.get('msg',None)
+        self.content = data.get('msg', None)
         self.author = User(data.get("sender_info"))
         # 传递 gateway 实例
         self.ctx = Context(data, bot.client.gate)
         self.bot = bot
         self.msg_timestamp = data.get('send_time')
-        self.row_command_info = data.get('command_info',None)
+        self.row_command_info = data.get('command_info', None)
         self.command = None
         self.command_option_values = []  # 存储命令选项的值，保持顺序
 
@@ -29,7 +29,7 @@ class Message:
         # 优先尝试从 addition 字段解析
         if self.row_command_info:
             try:
-                bot_command = self.row_command_info.get('name',None)
+                bot_command = self.row_command_info.get('name', None)
                 if bot_command:
                     command_info = self.row_command_info.get('command_info', {})
                     self.command = self.row_command_info.get('name', '').lstrip('/')
@@ -57,7 +57,6 @@ class Message:
         # 使用正则表达式匹配以 '/' 开头的命令
         command_pattern = r'^/(\S+)'
         match = re.match(command_pattern, self.content)
-
 
         if match:
             self.command = match.group(1)
