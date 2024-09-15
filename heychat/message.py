@@ -2,6 +2,7 @@
 
 import json
 import re
+
 from ._types import MessageTypes
 from .user import User
 from .context import Context
@@ -11,13 +12,13 @@ class Message:
     def __init__(self, data, bot):
 
         self.id = data.get('msg_id')
-        self.content = data.get('msg')
-        self.author = User(data.get("user_info"))
+        self.content = data.get('msg',None)
+        self.author = User(data.get("sender_info"))
         # 传递 gateway 实例
         self.ctx = Context(data, bot.client.gate)
         self.bot = bot
         self.msg_timestamp = data.get('send_time')
-        self.addition = data.get('addition')
+        self.row_command_info = data.get('command_info',None)
         self.command = None
         self.command_option_values = []  # 存储命令选项的值，保持顺序
 
@@ -26,22 +27,22 @@ class Message:
 
     def parse_command(self):
         # 优先尝试从 addition 字段解析
-        if self.addition:
+        if self.row_command_info:
             try:
-                addition_data = json.loads(self.addition)
-                bot_command = addition_data.get('bot_command')
+                bot_command = self.row_command_info.get('name',None)
                 if bot_command:
-                    command_info = bot_command.get('command_info', {})
-                    self.command = command_info.get('name', '').lstrip('/')
+                    command_info = self.row_command_info.get('command_info', {})
+                    self.command = self.row_command_info.get('name', '').lstrip('/')
                     # 调试信息
                     # print(f"Parsed command from addition: {self.command}")
-                    options = command_info.get('options', [])
-                    # print(f"Command options: {options}")
-                    # 按照顺序存储选项的值
+                    options = self.row_command_info.get('options', [])
+
                     if options:
                         for option in options:
                             option_value = option.get('value')
                             self.command_option_values.append(option_value)
+                        if not self.content:
+                            self.content = f'''/{self.command} {" ".join([f"{i['name']}:{i['value']}" for i in options])}'''
 
                     # 调试信息
                     # print(f"Command option values: {self.command_option_values}")
@@ -56,17 +57,27 @@ class Message:
         # 使用正则表达式匹配以 '/' 开头的命令
         command_pattern = r'^/(\S+)'
         match = re.match(command_pattern, self.content)
+
+
         if match:
             self.command = match.group(1)
             # 调试信息
             # print(f"Parsed command from content: {self.command}")
             option_values = self.content.lstrip(f"/{self.command}").strip()
-            if option_values:
-                self.command_option_values = option_values.split()
+
+            for option in option_values.split():
+                if ":" in option:
+                    option = option.split(":")[1]
+                    self.command_option_values.append(option)
+                else:
+                    self.command_option_values.append(option)
         else:
             pass
             # 调试信息
             # print("No command found in content.")
+
+        # 匹配： /command option1:value1 option2:value2 ...
+        # 提取但单独的value
 
     async def reply(self, content, msg_type=MessageTypes.MD_WITH_MENTION):
         return await self.ctx.channel.send(content, msg_type)
