@@ -12,7 +12,7 @@ from ._types import MessageTypes, EventTypes, ChannelTypes
 from .event import Event
 from .role import Role
 from . import api
-
+from .mdmessage import MDMessage, Element
 
 __all__ = [
     'Bot',
@@ -29,5 +29,8 @@ __all__ = [
     'EventTypes',
     'ChannelTypes',
     'Event',
-    'Role'
+    'Role',
+    'api',
+    'MDMessage',
+    'Element'
 ]
