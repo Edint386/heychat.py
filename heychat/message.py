@@ -2,7 +2,9 @@
 
 import json
 import re
+from typing import Union
 
+from .mdmessage import MDMessage
 from ._types import MessageTypes
 from .user import User
 from .context import Context
@@ -78,5 +80,5 @@ class Message:
         # 匹配： /command option1:value1 option2:value2 ...
         # 提取但单独的value
 
-    async def reply(self, content, msg_type=MessageTypes.MD_WITH_MENTION):
+    async def reply(self, content: Union[str,MDMessage], msg_type=MessageTypes.MD_WITH_MENTION):
         return await self.ctx.channel.send(content, msg_type)
