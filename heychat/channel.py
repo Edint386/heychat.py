@@ -3,6 +3,7 @@ from typing import Union
 from ._types import ChannelTypes, MessageTypes
 from . import api
 from .gateway import Gateway
+from .mdmessage import MDMessage, Element
 
 
 class PublicChannel:
@@ -21,8 +22,17 @@ class PublicTextChannel(PublicChannel):
     def __init__(self, data, gate):
         super().__init__(data, gate)
 
-    async def send(self, content, msg_type=MessageTypes.MD_WITH_MENTION):
-        return await self.gate.exec_req(api.Message.create(self.id, content, msg_type.value,self.guild_id))
+    async def send(self, content: Union[str, MDMessage], msg_type=MessageTypes.MD_WITH_MENTION, **kwargs):
+        if isinstance(content, MDMessage):
+            if content.count() == 1 and isinstance(content[0], Element.Image):
+                img_url = content[0].src
+                req = api.Message.create(self.id, MessageTypes.IMG, self.guild_id, img=img_url, **content.extra_info)
+            else:
+                req = api.Message.create(self.id, MessageTypes.MD_WITH_MENTION, self.guild_id, msg=str(content),
+                                         **content.extra_info)
+        else:
+            req = api.Message.create(self.id, msg_type, self.guild_id, msg=content, **kwargs)
+        return await self.gate.exec_req(req)
 
 
 class PublicVoiceChannel(PublicChannel):
@@ -37,6 +47,7 @@ class PrivateChannel(PublicTextChannel):
     async def send(self, content, msg_type=MessageTypes.MD_WITH_MENTION):
         # 当前暂无该接口
         raise NotImplementedError
+
 
 def public_channel_factory(data, gate) -> Union[PublicTextChannel, PublicVoiceChannel]:
     channel_info = data.get('channel_base_info')
