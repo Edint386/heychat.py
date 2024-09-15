@@ -1,14 +1,17 @@
 import functools
 import aiohttp
 
+
 class _Req:
     def __init__(self, method, route, params):
         self.method = method
         self.route = route
         self.params = params
 
+
 def req(method: str, route: str, **http_fields):
     """Decorator to create API request methods."""
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -20,8 +23,11 @@ def req(method: str, route: str, **http_fields):
             # 处理请求参数
             payload = _merge_params(method, http_fields, params)
             return _Req(method, route, payload)
+
         return wrapper
+
     return decorator
+
 
 def _merge_params(method: str, http_fields: dict, req_args: dict) -> dict:
     payload_key = 'params'
@@ -38,6 +44,7 @@ def _merge_params(method: str, http_fields: dict, req_args: dict) -> dict:
     params.update(http_fields)
     return params
 
+
 def _remove_content_type(http_fields: dict) -> dict:
     if http_fields.get('headers', {}).get('Content-Type', None) is not None:
         http_fields = http_fields.copy()
@@ -45,11 +52,13 @@ def _remove_content_type(http_fields: dict) -> dict:
         del http_fields['headers']['Content-Type']
     return http_fields
 
+
 def _build_form_payload(req_args: dict):
     data = aiohttp.FormData()
     for name, value in req_args.items():
         data.add_field(name, value)
     return 'data', data
+
 
 class Message:
     """Class containing API methods."""
@@ -57,9 +66,10 @@ class Message:
     # 发送消息
     @staticmethod
     @req('POST', '/chatroom/v2/channel_msg/send')
-    def create(channel_id, msg, msg_type, room_id):
+    def create(channel_id, msg_type, room_id, msg=None, **kwargs):
         """Send a message to a channel."""
         pass
+
 
 class File:
     # 上传文件
