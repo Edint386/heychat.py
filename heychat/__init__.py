@@ -6,7 +6,7 @@ from .gateway import Gateway
 from .message import Message
 from .user import User
 from .guild import Guild
-from .channel import Channel
+from .channel import PublicChannel, PublicVoiceChannel, PublicTextChannel
 from .context import Context
 from ._types import MessageTypes, EventTypes, ChannelTypes
 from .event import Event
@@ -21,7 +21,9 @@ __all__ = [
     'Message',
     'User',
     'Guild',
-    'Channel',
+    'PublicChannel',
+    'PublicVoiceChannel',
+    'PublicTextChannel',
     'Context',
     'MessageTypes',
     'EventTypes',
