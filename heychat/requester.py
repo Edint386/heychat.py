@@ -1,10 +1,14 @@
 import aiohttp
+import random
+
 from .api import _Req
+
 
 class Requester:
     """
     Handles the lowest-level HTTP request logic.
     """
+
     def __init__(self, token):
         self.token = token
         self.base_url = 'https://chat.xiaoheihe.cn'
@@ -40,7 +44,7 @@ class Requester:
         # Merge default headers and params
         merged_headers = {**self.default_headers, **headers}
         merged_params = {**self.default_params, **params}
-
+        merged_params['heychat_ack_id'] = random.randint(100000, 999999)
         async with self.session.request(method, url, headers=merged_headers, params=merged_params, **kwargs) as resp:
             response_data = await resp.json()
             if resp.status != 200 or response_data.get("status") == "failed":
