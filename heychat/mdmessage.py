@@ -18,7 +18,6 @@ class MDMessage:
         return len(self.messages)
 
     def __str__(self):
-        # 如果缓存为 None，更新缓存，否则直接返回缓存内容
         return ''.join([str(message) for message in self.messages])
 
     def __getitem__(self, index):
@@ -27,7 +26,7 @@ class MDMessage:
 
     def __setitem__(self, index, value):
         # 允许通过索引修改 messages 列表中的元素
-        self.messages[index] = str(value)
+        self.messages[index] = value
 
     def __len__(self):
         # 使 len(md) 返回消息的数量
