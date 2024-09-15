@@ -98,9 +98,9 @@ bot.run()
 
 
 <details>
-    <summary> ❌ 支持更多指令变量类型</summary>
+    <summary> ✅ 支持更多指令变量类型</summary>
 
-    还没看示例，我也不知道长啥样
+    已经看了，觉得不需要适配现在的够用了，如果有具体需求欢迎提出
 
 </details>
 
