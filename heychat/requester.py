@@ -38,13 +38,14 @@ class Requester:
         """
         Executes a raw HTTP request.
         """
-        url = f"{self.base_url}{route}"
+        url = route
         headers = headers or {}
         params = params or {}
         # Merge default headers and params
         merged_headers = {**self.default_headers, **headers}
         merged_params = {**self.default_params, **params}
         merged_params['heychat_ack_id'] = random.randint(100000, 999999)
+
         async with self.session.request(method, url, headers=merged_headers, params=merged_params, **kwargs) as resp:
             response_data = await resp.json()
             if resp.status != 200 or response_data.get("status") == "failed":
@@ -56,5 +57,3 @@ class Requester:
     async def exec_req(self, r: _Req):
         """_Req -> raw request"""
         return await self.request(r.method, r.route, **r.params)
-    # async def close(self):
-    #     await self.session.close()
