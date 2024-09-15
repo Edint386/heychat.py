@@ -1,14 +1,49 @@
+from typing import Union
+
 from ._types import ChannelTypes, MessageTypes
 from . import api
+from .gateway import Gateway
 
-class Channel:
+
+class PublicChannel:
     def __init__(self, data, gate):
-        self.id = data.get('channel_id')
-        self.name = data.get('channel_name')
-        self.type = ChannelTypes(data.get('channel_type')) if 'channel_type' in data else None
-        self.guild_id = data.get('room_id')  # 用于 bot.client.send
-        self.gate = gate  # 添加 gateway 实例
+        channel_info = data.get('channel_base_info')
+
+        self.id: str = channel_info.get('channel_id')
+        self.name: str = channel_info.get('channel_name')
+        self.type: ChannelTypes = ChannelTypes(channel_info.get('channel_type')) if 'channel_type' in data else None
+
+        self.guild_id: str = data.get("room_base_info").get('room_id')  # 用于 bot.client.send
+        self.gate: Gateway = gate  # 添加 gateway 实例
+
+
+class PublicTextChannel(PublicChannel):
+    def __init__(self, data, gate):
+        super().__init__(data, gate)
 
     async def send(self, content, msg_type=MessageTypes.MD_WITH_MENTION):
-        # 使用 Gateway 的 send 方法
         return await self.gate.exec_req(api.Message.create(self.id, content, msg_type.value,self.guild_id))
+
+
+class PublicVoiceChannel(PublicChannel):
+    def __init__(self, data, gate):
+        super().__init__(data, gate)
+
+
+class PrivateChannel(PublicTextChannel):
+    def __init__(self, data, gate):
+        super().__init__(data, gate)
+
+    async def send(self, content, msg_type=MessageTypes.MD_WITH_MENTION):
+        # 当前暂无该接口
+        raise NotImplementedError
+
+def public_channel_factory(data, gate) -> Union[PublicTextChannel, PublicVoiceChannel]:
+    channel_info = data.get('channel_base_info')
+    channel_type = ChannelTypes(channel_info.get('channel_type'))
+    if channel_type == ChannelTypes.TEXT:
+        return PublicTextChannel(data, gate)
+    elif channel_type == ChannelTypes.VOICE:
+        return PublicVoiceChannel(data, gate)
+    else:
+        raise NotImplementedError(f"Channel type {channel_type} is not implemented yet.")
