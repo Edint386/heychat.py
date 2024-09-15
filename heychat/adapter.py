@@ -6,7 +6,7 @@ def adapt_type_5_message(type_5_message):
     # Extract relevant fields from the Type 5 message
     data = type_5_message["data"]["addition"]
     data = json.loads(data) if data else None
-
+    data = data["bot_command"] if data else None
     type_50_message = {
         "sequence": type_5_message["sequence"] - 10,  # Example: Adjust the sequence slightly
         "type": "50",
