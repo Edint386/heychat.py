@@ -106,9 +106,10 @@ bot.run()
 
 
 <details>
-    <summary> ❌ 从type5转移至type50</summary>
+    <summary> ✅ 从type5转移至type50</summary>
 
-    等什么时候官方把type5删了再写
+    （划掉）等什么时候官方把type5删了再写（划掉）已经写了
+
 
 </details>
 <details>
