@@ -15,14 +15,20 @@ def req(method: str, route: str, **http_fields):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            self_instance = args[0]
+            base_url = getattr(self_instance, 'base_url', None)
+            args = args[1:]
+            if base_url is None:
+                raise ValueError('base_url is not set')
             # 获取函数参数名列表
-            param_names = func.__code__.co_varnames[:func.__code__.co_argcount]
+            param_names = func.__code__.co_varnames[:func.__code__.co_argcount][1:]
             # 将位置参数和关键字参数合并
             params = dict(zip(param_names, args))
             params.update(kwargs)
             # 处理请求参数
             payload = _merge_params(method, http_fields, params)
-            return _Req(method, route, payload)
+            return _Req(method, base_url + route, payload)
+
 
         return wrapper
 
@@ -62,21 +68,25 @@ def _build_form_payload(req_args: dict):
 
 class Message:
     """Class containing API methods."""
+    base_url: str = 'https://chat.xiaoheihe.cn'
 
     # 发送消息
-    @staticmethod
+    @classmethod
     @req('POST', '/chatroom/v2/channel_msg/send')
-    def create(channel_id, msg_type, room_id, msg=None, **kwargs):
+    def create(self, channel_id, msg_type, room_id, msg=None, **kwargs):
         """Send a message to a channel."""
         pass
 
 
 class File:
+    base_url: str = 'https://chat-upload.xiaoheihe.cn'
+
     # 上传文件
-    @staticmethod
-    @req('POST', '/file/upload', headers={'Content-Type': 'multipart/form-data'})
-    def upload(file):
+    @classmethod
+    @req('POST', '/upload', headers={'Content-Type': 'multipart/form-data'})
+    def upload(self,file):
         """Upload a file."""
         pass
 
     # 可以在这里添加更多的 API 方法
+
