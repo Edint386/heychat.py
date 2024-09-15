@@ -4,10 +4,28 @@ import traceback
 import aiohttp
 import asyncio
 import json
+
 from .message import Message
 from .event import Event
 import ssl
 import logging
+from .adapter import adapt_type_5_message
+from collections import OrderedDict
+
+class LimitedDict(OrderedDict):
+    def __init__(self, max_size, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.max_size = max_size
+
+    def __setitem__(self, key, value):
+        # 先调用父类的 __setitem__ 来设置键值对
+        super().__setitem__(key, value)
+        # 如果超过了限制，移除最早插入的键值对
+        if len(self) > self.max_size:
+            self.popitem(last=False)  # last=False 表示移除最早的键值对
+
+
+
 
 class Receiver:
     def __init__(self, token, bot):
@@ -32,6 +50,7 @@ class Receiver:
         self.message_queue = asyncio.Queue()
         self.ping_interval = 30  # 心跳间隔
         self.logger = logging.getLogger(__name__)
+        self.messages = LimitedDict(20)
 
     async def connect(self):
         self.logger.info("Connecting to WebSocket server...")
@@ -122,8 +141,16 @@ class Receiver:
         await self.session.close()
 
     async def handle_message(self, data):
+        msg_id = data.get('data').get('msg_id')
+
+        if msg_id in self.messages.keys():
+            return
 
         if data['type'] == '5':  # 消息类型
+            data = adapt_type_5_message(data)
+
+        self.messages[msg_id] = data
+        if data['type'] == '50':  # 消息类型
             message = Message(data['data'], self.bot)
             # 调试信息
             # print(f"Received message: {message.content}")
@@ -132,6 +159,7 @@ class Receiver:
 
             if 'on_message' in self.bot.event_handlers:
                 await self.bot.event_handlers['on_message'](message)
+
             if message.command:
                 command_name = message.command
                 # print(f"option_values: {message.command_option_values}")
