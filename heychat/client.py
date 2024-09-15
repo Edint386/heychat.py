@@ -1,16 +1,19 @@
 import asyncio
+from typing import Union
 
 import aiohttp
 
 from ._types import MessageTypes
-from . import api
+from .channel import PublicTextChannel, PublicVoiceChannel
+from .gateway import Gateway
+
 
 class Client:
     def __init__(self, token, gate):
         self.token = token
         self.base_url = 'https://chat.xiaoheihe.cn'
         self.session = aiohttp.ClientSession()
-        self.gate = gate
+        self.gate: Gateway = gate
         self.headers = {'token': token}
         self.params = {
             'client_type': 'heybox_chat',
@@ -22,8 +25,9 @@ class Client:
             'chat_version': '1.24.5'
         }
 
-    async def send(self, target, content, msg_type=MessageTypes.MD_WITH_MENTION):
-        return await self.gate.exec_req(api.Message.create(target.id, content, msg_type.value, target.guild_id))
+    async def send(self, target: Union[PublicTextChannel, PublicVoiceChannel], content,
+                   msg_type=MessageTypes.MD_WITH_MENTION):
+        return await target.send(content, msg_type)
 
     async def upload(self, file):
         """
