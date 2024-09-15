@@ -1,19 +1,20 @@
 # _types.py
-import enum
+from enum import IntEnum
 
-@enum.unique
-class MessageTypes(enum.Enum):
+
+class MessageTypes(IntEnum):
     IMG = 3
     MD = 4
     MD_WITH_MENTION = 10
+
 
 class EventTypes:
     pass
     # JOINED_GUILD = 'JOINED_GUILD'
     # 其他事件类型
 
-@enum.unique
-class ChannelTypes(enum.Enum):
+
+class ChannelTypes(IntEnum):
     VOICE = 0
     TEXT = 1
     ANNOUNCEMENT = 2
