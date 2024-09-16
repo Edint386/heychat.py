@@ -3,10 +3,10 @@ Python SDK for HeyChat
 
 ## 安装
 ```shell
-pip install aiohttp
+pip install heychat
 ```
 
-Python小白不会用pypi，所以就手动下载下来然后把heychat文件夹拖到你的项目里吧（）
+
 
 ## 最简示例
 
