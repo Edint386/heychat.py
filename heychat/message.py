@@ -83,4 +83,4 @@ class Message:
         # 提取但单独的value
 
     async def reply(self, content: Union[str,MDMessage], msg_type=MessageTypes.MD_WITH_MENTION):
-        return await self.ctx.channel.send(content, msg_type)
+        return await self.ctx.channel.send(content, msg_type, reply_id=self.id)
