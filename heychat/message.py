@@ -58,6 +58,8 @@ class Message:
     def parse_command_from_content(self):
         # 使用正则表达式匹配以 '/' 开头的命令
         command_pattern = r'^/(\S+)'
+        if not self.content:
+            return
         match = re.match(command_pattern, self.content)
 
         if match:
