@@ -87,9 +87,12 @@ class Element:
 
     class Mention:
         def __init__(self, id: str):
+            id = 'hear' if id == 'here' else id
             self.id = str(id)
 
         def __str__(self):
+            if self.id in ['all', 'hear']:
+                return f'@{{{self.id}}}'
             return f'@{{id:{self.id}}}'
 
     class Channel:
