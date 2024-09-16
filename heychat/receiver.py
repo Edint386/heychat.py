@@ -12,6 +12,7 @@ import logging
 from .adapter import adapt_type_5_message
 from collections import OrderedDict
 
+
 class LimitedDict(OrderedDict):
     def __init__(self, max_size, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,8 +24,6 @@ class LimitedDict(OrderedDict):
         # 如果超过了限制，移除最早插入的键值对
         if len(self) > self.max_size:
             self.popitem(last=False)  # last=False 表示移除最早的键值对
-
-
 
 
 class Receiver:
@@ -125,6 +124,7 @@ class Receiver:
                     continue
                 try:
                     data = json.loads(message)
+                    # print(data)
                     await self.handle_message(data)
                 except json.JSONDecodeError as e:
                     self.logger.error(f"Failed to decode JSON: {e}")
@@ -146,7 +146,11 @@ class Receiver:
         if msg_id in self.messages.keys():
             return
 
-        if data['type'] == '5':  # 消息类型
+        if data['type'] == '50' and data['data'].get('command_info').get('id'):
+            # 跳过命令消息, 因为50消息如果command id为空说明这条消息无内容
+            return
+
+        if data['type'] == '5' :
             data = adapt_type_5_message(data)
 
         self.messages[msg_id] = data
@@ -194,4 +198,3 @@ class Receiver:
 
     async def start(self):
         await self.connect()
-
