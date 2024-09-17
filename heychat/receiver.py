@@ -31,7 +31,7 @@ class Receiver:
         self.token = token
         self.bot = bot
         self.ws_url = 'wss://chat.xiaoheihe.cn/chatroom/ws/connect'
-        self.session = aiohttp.ClientSession()
+        self.session = None
         self.headers = {
             'token': token
         }
@@ -197,4 +197,5 @@ class Receiver:
                 await self.bot.event_handlers['on_event'][event_type](self.bot, event)
 
     async def start(self):
+        self.session = aiohttp.ClientSession()
         await self.connect()
