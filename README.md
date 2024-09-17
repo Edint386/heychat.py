@@ -135,8 +135,7 @@ bot.run()
 
 
 ## 写在最后的省流
-抄的[khl.py](https://github.com/TWT233/khl.py)  
-用的ChatGPT  
-对了家人们有没有会pypi的教教我怎么发包（） 太蠢了整不明白
+抄的[khl.py](https://github.com/TWT233/khl.py)
+
 
 
