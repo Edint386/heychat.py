@@ -12,7 +12,7 @@ class Requester:
     def __init__(self, token):
         self.token = token
         self.base_url = 'https://chat.xiaoheihe.cn'
-        self.session = aiohttp.ClientSession()
+        self.session = None
         self.default_headers = {
             'token': token
         }
@@ -46,6 +46,9 @@ class Requester:
         merged_params = {**self.default_params, **params}
         merged_params['heychat_ack_id'] = random.randint(100000, 999999)
 
+        if not self.session:
+            await self.initialize_session()
+
         async with self.session.request(method, url, headers=merged_headers, params=merged_params, **kwargs) as resp:
             response_data = await resp.json()
             if resp.status != 200 or response_data.get("status") == "failed":
@@ -53,6 +56,9 @@ class Requester:
                 message = response_data.get('msg', 'Unknown Error')
                 raise self.APIRequestFailed(method, url, status, message)
             return response_data
+
+    async def initialize_session(self):
+        self.session = aiohttp.ClientSession()
 
     async def exec_req(self, r: _Req):
         """_Req -> raw request"""
