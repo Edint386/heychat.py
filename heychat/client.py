@@ -13,7 +13,7 @@ class Client:
     def __init__(self, token, gate):
         self.token = token
         self.base_url = 'https://chat.xiaoheihe.cn'
-        self.session = aiohttp.ClientSession()
+        self.session = None
         self.gate: Gateway = gate
         self.headers = {'token': token}
         self.params = {
@@ -45,4 +45,5 @@ class Client:
         return await self.gate.request(method, endpoint, **kwargs)
 
     async def start(self):
+        self.session = aiohttp.ClientSession()
         await asyncio.gather(self.gate.run())
