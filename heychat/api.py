@@ -77,6 +77,12 @@ class Message:
         """Send a message to a channel."""
         pass
 
+    @classmethod
+    @req('POST', '/chatroom/v2/channel_msg/update')
+    def update(self, msg_id, msg, room_id, channel_id, **kwargs):
+        """Update existed message"""
+        pass
+
 
 class File:
     base_url: str = 'https://chat-upload.xiaoheihe.cn'
