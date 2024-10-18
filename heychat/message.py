@@ -84,3 +84,6 @@ class Message:
 
     async def reply(self, content: Union[str,MDMessage], msg_type=MessageTypes.MD_WITH_MENTION):
         return await self.ctx.channel.send(content, msg_type, reply_id=self.id)
+
+    async def delete(self):
+        return await self.ctx.channel.delete_message(self.id)

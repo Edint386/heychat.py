@@ -41,11 +41,10 @@ class Client:
             **kwargs}
         if reply_id:
             data['reply_id'] = reply_id
-
-
-
         return await self.gate.exec_req(api.Message.update(**data))
 
+    async def delete_message(self, msg_id, room_id, channel_id):
+        return await self.gate.exec_req(api.Message.delete(msg_id, room_id, channel_id))
 
     async def upload(self, file):
         """

@@ -83,6 +83,13 @@ class Message:
         """Update existed message"""
         pass
 
+    @classmethod
+    @req('POST', '/chatroom/v2/channel_msg/delete')
+    def delete(self, msg_id, room_id, channel_id):
+        """Delete a message"""
+        pass
+
+
 
 class File:
     base_url: str = 'https://chat-upload.xiaoheihe.cn'

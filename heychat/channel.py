@@ -51,6 +51,9 @@ class PublicTextChannel(PublicChannel):
 
         return await self.gate.exec_req(api.Message.update(**data))
 
+    async def delete_message(self, msg_id:str):
+        return await self.gate.exec_req(api.Message.delete(msg_id, self.guild_id, self.id))
+
 
 class PublicVoiceChannel(PublicChannel):
     def __init__(self, data, gate):
