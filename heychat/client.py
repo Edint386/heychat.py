@@ -28,7 +28,24 @@ class Client:
 
     async def send(self, target: Union[PublicTextChannel, PublicVoiceChannel], content,
                    msg_type=MessageTypes.MD_WITH_MENTION):
-        return await target.send(content, msg_type)
+        return (await target.send(content, msg_type))
+
+    async def update_message(self, msg_id, content, room_id, channel_id,
+                             msg_type=MessageTypes.MD_WITH_MENTION ,reply_id=None, **kwargs):
+        data = {
+            'msg_id': msg_id,
+            'content': content,
+            'room_id': room_id,
+            'channel_id': channel_id,
+            'msg_type': msg_type,
+            **kwargs}
+        if reply_id:
+            data['reply_id'] = reply_id
+
+
+
+        return await self.gate.exec_req(api.Message.update(**data))
+
 
     async def upload(self, file):
         """
@@ -47,3 +64,4 @@ class Client:
     async def start(self):
         self.session = aiohttp.ClientSession()
         await asyncio.gather(self.gate.run())
+
