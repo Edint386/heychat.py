@@ -1,3 +1,5 @@
+import time
+
 import aiohttp
 import random
 
@@ -44,7 +46,7 @@ class Requester:
         # Merge default headers and params
         merged_headers = {**self.default_headers, **headers}
         merged_params = {**self.default_params, **params}
-        merged_params['heychat_ack_id'] = random.randint(100000, 999999)
+        merged_params['heychat_ack_id'] = int(time.time())
 
         if not self.session:
             await self.initialize_session()
@@ -55,7 +57,7 @@ class Requester:
                 status = response_data.get('err_code', resp.status)
                 message = response_data.get('msg', 'Unknown Error')
                 raise self.APIRequestFailed(method, url, status, message)
-            return response_data
+            return response_data['result']
 
     async def initialize_session(self):
         self.session = aiohttp.ClientSession()
