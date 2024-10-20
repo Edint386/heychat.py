@@ -1,11 +1,24 @@
 # role.py
 
+from ._types import GuildRoleTypes
+
 class Role:
     def __init__(self, **kwargs):
-        self.role_id: str = kwargs.get("role_id", str())
+        self.id: str = kwargs.get("id", "")
         self.name: str = kwargs.get("name", "")
-        # self.color: int = kwargs.get("color", 0)
-        # self.position: int = kwargs.get("position", 0)
-        # self.hoist: int = kwargs.get("hoist", 0)
-        # self.mentionable: int = kwargs.get("mentionable", 0)
-        # self.permissions: int = kwargs.get("permissions", 0)
+        self.icon: str = kwargs.get("icon", "")
+        self.color: int = kwargs.get("color", 0)
+        self.color_list: list = kwargs.get("color_list", [])
+        self.position: int = kwargs.get("position", 0)
+        self.permissions: int = kwargs.get("permissions", 0)
+        self.room_id = kwargs.get("room_id", "")
+        self.type: GuildRoleTypes = GuildRoleTypes(kwargs.get("type", 0))
+        self.hoist: bool = bool(kwargs.get("hoist", 0))
+        self.creator: bool = bool(kwargs.get("creator", 0))
+        self.create_time: int = kwargs.get("create_time", 0)
+
+
+
+
+    def has_permission(self, bit_value: int) -> bool:
+        raise NotImplementedError

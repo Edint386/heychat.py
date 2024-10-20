@@ -13,6 +13,18 @@ class EventTypes:
     # JOINED_GUILD = 'JOINED_GUILD'
     # 其他事件类型
 
+class GuildRoleTypes(IntEnum):
+    DEFAULT = 0        # 默认角色类型
+    GAME = 1           # 游戏角色类型
+    BOT = 2            # 机器人角色类型
+    MEMBER_ADMIN = 3   # 成员管理员类型
+    TEXT_CHANNEL_ADMIN = 4  # 文本频道管理员类型
+    VOICE_CHANNEL_ADMIN = 5 # 语音频道管理员类型
+    COMMUNITY_BUILDER = 6   # 社区建设者类型
+    SENIOR_ADMIN = 7        # 高级管理员类型
+    GUEST = 254         # 访客类型
+    ALL = 255     # 所有用户角色类型
+
 
 class ChannelTypes(IntEnum):
     VOICE = 0

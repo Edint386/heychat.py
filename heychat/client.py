@@ -1,10 +1,11 @@
+# client.py
 import asyncio
 from typing import Union
 
 import aiohttp
 
 from . import api
-from ._types import MessageTypes
+from ._types import MessageTypes, GuildRoleTypes
 from .channel import PublicTextChannel, PublicVoiceChannel
 from .gateway import Gateway
 
@@ -45,6 +46,50 @@ class Client:
 
     async def delete_message(self, msg_id, room_id, channel_id):
         return await self.gate.exec_req(api.Message.delete(msg_id, room_id, channel_id))
+
+
+    async def fetch_roles_list(self, room_id):
+        return await self.gate.exec_req(api.GuildRole.list(room_id))
+
+    async def create_role(self, name, room_id, permissions, type=GuildRoleTypes.DEFAULT, hoist=False,
+                          icon=None, color=None, color_list=None, position=None):
+        data = {
+            'name': name,
+            'room_id': room_id,
+            'permissions': permissions,
+            'type': type
+        }
+
+        optional_params = {
+            'hoist': hoist,
+            'icon': icon,
+            'color': color,
+            'color_list': color_list,
+            'position': position
+        }
+
+        data.update({key: value for key, value in optional_params.items() if value is not None})
+
+        return await self.gate.exec_req(api.GuildRole.create(**data))
+
+    async def update_role(self, role_id, room_id, name, permissions, type=GuildRoleTypes.DEFAULT,
+                          hoist=False,icon=None, color=None, color_list=None, position=None):
+        data = {
+            'role_id': role_id,
+            'room_id': room_id,
+            'name': name,
+            'permissions': permissions,
+            'type': type,
+            'hoist': hoist,
+            'icon': icon,
+            'color': color,
+            'color_list': color_list,
+            'position': position
+        }
+        return await self.gate.exec_req(api.GuildRole.update(**{k: v for k, v in data.items() if v is not None}))
+
+    async def delete_role(self, role_id, room_id):
+        return await self.gate.exec_req(api.GuildRole.delete(role_id, room_id))
 
     async def upload(self, file):
         """

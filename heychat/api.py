@@ -90,6 +90,32 @@ class Message:
         pass
 
 
+class GuildRole:
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/room_role'
+
+    @classmethod
+    @req('GET', '/roles')
+    def list(self, room_id):
+        """Get roles of a room."""
+        pass
+
+    @classmethod
+    @req('POST', '/create')
+    def create(self, name, room_id, permissions, type, hoist, nonce, icon, color, color_list, position):
+        """Create a role."""
+        pass
+
+    @classmethod
+    @req('POST', '/update')
+    def update(self, id, name, room_id, permissions, type, hoist, nonce, icon, color, color_list, position):
+        """Update a role."""
+        pass
+
+    @classmethod
+    @req('POST', '/delete')
+    def delete(self, role_id, room_id):
+        """Delete a role."""
+        pass
 
 class File:
     base_url: str = 'https://chat-upload.xiaoheihe.cn'
