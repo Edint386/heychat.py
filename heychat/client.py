@@ -27,9 +27,15 @@ class Client:
             'chat_version': '1.24.5'
         }
 
+    async def fetch_channel(self, guild_id, channel_id):
+        '''not implemented, return a dummy channel'''
+        return PublicTextChannel({'channel_base_info': {'channel_id': channel_id},'room_base_info': {'room_id': guild_id}}, self.gate)
+
     # message related
-    async def send(self, target: Union[PublicTextChannel, PublicVoiceChannel], content,
-                   msg_type=MessageTypes.MD_WITH_MENTION):
+    async def send(self, target: Union[PublicTextChannel, str], content,
+                   msg_type=MessageTypes.MD_WITH_MENTION,guild_id=None):
+        if isinstance(target, str):
+            target = await self.fetch_channel(guild_id, target)
         return (await target.send(content, msg_type))
 
     async def update_message(self, msg_id, content, room_id, channel_id,
