@@ -1,11 +1,15 @@
+# gateway.py
 from .requester import Requester
 from .api import _Req
 
 
 class Gateway:
-    def __init__(self, token, receiver):
+    def __init__(self, token):
         self.token = token
         self.requester = Requester(token)
+        self.receiver = None
+
+    def set_receiver(self, receiver):
         self.receiver = receiver
 
     async def request(self, method, path, **params):
