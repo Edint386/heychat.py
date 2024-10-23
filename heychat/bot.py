@@ -8,7 +8,12 @@ from .receiver import Receiver
 class Bot:
     def __init__(self, token):
         self.token = token
-        self.client = Client(token,Gateway(token,Receiver(token,self)))
+
+        self.gateway = Gateway(token)
+        self.client = Client(token, self.gateway)
+        self.receiver = Receiver(token, self)
+        self.gateway.set_receiver(self.receiver)
+
         self.commands = {}
         self.event_handlers = {}
         self.loop = asyncio.get_event_loop()
