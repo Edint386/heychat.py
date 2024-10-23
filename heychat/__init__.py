@@ -8,8 +8,8 @@ from .user import User
 from .guild import Guild
 from .channel import PublicChannel, PublicVoiceChannel, PublicTextChannel
 from .context import Context
-from ._types import MessageTypes, EventTypes, ChannelTypes
-from .event import Event
+from ._types import MessageTypes, EventTypes, ChannelTypes, GuildRoleTypes
+from .event import Event, ReactionEvent, GuildMemberEvent
 from .role import Role
 from . import api
 from .mdmessage import MDMessage, Element
@@ -24,11 +24,13 @@ __all__ = [
     'PublicChannel',
     'PublicVoiceChannel',
     'PublicTextChannel',
-    'Context',
     'MessageTypes',
     'EventTypes',
     'ChannelTypes',
+    'GuildRoleTypes',
     'Event',
+    'ReactionEvent',
+    'GuildMemberEvent',
     'Role',
     'api',
     'MDMessage',
