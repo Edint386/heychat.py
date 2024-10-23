@@ -5,7 +5,7 @@ Python SDK for HeyChat
 ![GitHub last commit](https://img.shields.io/github/last-commit/Edint386/heychat.py?logo=github)
 [![khl server](https://www.kaiheila.cn/api/v3/badge/guild?guild_id=4735647834857317&style=3)](https://kook.top/D2m28x)
 ![github stars](https://img.shields.io/github/stars/Edint386/heychat.py?style=social)
-
+[![khl server](https://api.heibot.cn/badge/server?text=heychat.py)](https://chat.xiaoheihe.cn/idm3x0tv)
 
 ## 安装
 ```shell
@@ -95,7 +95,7 @@ bot.run()
 
         # or
         
-        md_msg = MDMessage("这是一段文字",
+        md_msg = MDMessage("这是一段文字\n",
                             Element.TEXT("这也是一段文字"),
                             Element.IMG("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"),
                             Element.MENTION("18661718"))
@@ -122,13 +122,18 @@ bot.run()
 
 </details>
 <details>
-    <summary> ❌ 事件处理</summary>
+    <summary> ✅ 事件处理</summary>
 
-    @bot.on_event(EventType.JOIN_GUILD)
-    async def on_join_guild(event: JoinGuildEvent):
-        pass
+    from heychat import Bot, EventTypes, GuildMemberEvent
+    @bot.on_event(EventTypes.JOINED_GUILD)
+    async def on_joined_guild(e: GuildMemberEvent):
+        print(f"{e.user.username}加入了{e.guild.name}")
 
 </details>
+<details>
+    <summary> ❌ 日志</summary>
+</details>
+
 
 ## 贡献
 欢迎大家提供建议以及pr！
