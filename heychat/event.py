@@ -19,7 +19,6 @@ class Event:
         self.data = data.get('data')
         self.timestamp = data.get('timestamp')
         self.gate = gate
-        self.event_type = self.determine_event_type()
 
     def determine_event_type(self):
         return None
