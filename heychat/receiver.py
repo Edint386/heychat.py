@@ -19,11 +19,9 @@ class LimitedDict(OrderedDict):
         self.max_size = max_size
 
     def __setitem__(self, key, value):
-        # 先调用父类的 __setitem__ 来设置键值对
         super().__setitem__(key, value)
-        # 如果超过了限制，移除最早插入的键值对
         if len(self) > self.max_size:
-            self.popitem(last=False)  # last=False 表示移除最早的键值对
+            self.popitem(last=False)
 
 
 class Receiver:
@@ -138,23 +136,26 @@ class Receiver:
         self.close = True
         if self.ws:
             await self.ws.close()
-        await self.session.close()
+        if self.session:
+            await self.session.close()
 
     async def handle_message(self, data):
-        msg_id = data.get('data').get('msg_id')
+        # 检查消息 ID，防止重复处理
+        msg_id = data.get('data', {}).get('msg_id', data.get('sequence'))
 
         if msg_id in self.messages.keys():
             return
 
-        if data['type'] == '50' and data['data'].get('command_info').get('id'):
-            # 跳过命令消息, 因为50消息如果command id为空说明这条消息无内容
-            return
+        event_type = data.get('type')
 
-        if data['type'] == '5' :
+        if event_type == '5' :
             data = adapt_type_5_message(data)
 
         self.messages[msg_id] = data
-        if data['type'] == '50':  # 消息类型
+
+        if event_type == '50':  # 消息类型
+            if not data['data'].get('command_info').get('id'):
+                return
             message = Message(data['data'], self.bot)
             # 调试信息
             # print(f"Received message: {message.content}")
