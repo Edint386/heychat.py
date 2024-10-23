@@ -1,3 +1,4 @@
+# bot.py
 import asyncio
 from .gateway import Gateway
 from .client import Client
@@ -32,8 +33,11 @@ class Bot:
         def decorator(func):
             if 'on_event' not in self.event_handlers:
                 self.event_handlers['on_event'] = {}
-            self.event_handlers['on_event'][event_type] = func
+            if event_type not in self.event_handlers['on_event']:
+                self.event_handlers['on_event'][event_type] = []
+            self.event_handlers['on_event'][event_type].append(func)
             return func
+
         return decorator
 
     async def start(self):

@@ -1,7 +1,66 @@
 # event.py
 
+from ._types import EventTypes
+from .guild import Guild
+from .user import User
+
+EVENT_TYPE_MAP = {}
+
+def register_event(event_type):
+    def decorator(cls):
+        EVENT_TYPE_MAP[event_type] = cls
+        return cls
+    return decorator
+
 class Event:
-    def __init__(self, data):
+    def __init__(self, data, gate):
         self.type = data.get('type')
+        self.notify_type = data.get('notify_type', '')
         self.data = data.get('data')
         self.timestamp = data.get('timestamp')
+        self.gate = gate
+        self.event_type = self.determine_event_type()
+
+    def determine_event_type(self):
+        return None
+
+@register_event('5003')
+class ReactionEvent(Event):
+    def __init__(self, data, gate):
+        super().__init__(data, gate)
+        self.channel_id = self.data.get('channel_id')
+        self.msg_id = self.data.get('msg_id')
+        self.user_id = self.data.get('user_id')
+        self.emoji = self.data.get('emoji')
+        self.is_add = self.data.get('is_add') == 1
+        self.event_type = self.determine_event_type()
+
+    def determine_event_type(self):
+        if self.is_add:
+            return EventTypes.ADDED_REACTION
+        else:
+            return EventTypes.DELETED_REACTION
+
+@register_event('3001')
+class GuildMemberEvent(Event):
+    def __init__(self, data, gate):
+        super().__init__(data, gate)
+        self.user_info = self.data.get('user_info', {})
+        self.state = self.data.get('state')
+        self.event_type = self.determine_event_type()
+
+        self.user = User(self.user_info)
+        self.guild = Guild(self.data.get('room_base_info', {}), gate)
+
+    def determine_event_type(self):
+        if self.state == 1:
+            return EventTypes.JOINED_GUILD
+        elif self.state == 0:
+            return EventTypes.LEFT_GUILD
+        else:
+            return None
+
+def create_event(data, gate):
+    event_type = data.get('type')
+    event_class = EVENT_TYPE_MAP.get(event_type, Event)
+    return event_class(data, gate)

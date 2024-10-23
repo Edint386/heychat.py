@@ -8,10 +8,15 @@ class MessageTypes(IntEnum):
     MD_WITH_MENTION = 10
 
 
+# _types.py
+
 class EventTypes:
-    pass
-    # JOINED_GUILD = 'JOINED_GUILD'
-    # 其他事件类型
+    JOINED_GUILD = 'joined_room'
+    LEFT_GUILD = 'left_room'
+    ADDED_REACTION = 'added_reaction'
+    DELETED_REACTION = 'deleted_reaction'
+
+
 
 class GuildRoleTypes(IntEnum):
     DEFAULT = 0        # 默认角色类型

@@ -16,7 +16,6 @@ class Message:
         self.id = data.get('msg_id')
         self.content = data.get('msg', None)
         self.author = User(data.get("sender_info"))
-        # 传递 gateway 实例
         self.ctx = Context(data, bot.client.gate)
         self.bot = bot
         self.msg_timestamp = data.get('send_time')
@@ -28,7 +27,7 @@ class Message:
         self.parse_command()
 
     def parse_command(self):
-        # 优先尝试从 addition 字段解析
+        # 优先尝试从 command_info 字段解析
         if self.row_command_info:
             try:
                 bot_command = self.row_command_info.get('name', None)
@@ -49,10 +48,10 @@ class Message:
                     # 调试信息
                     # print(f"Command option values: {self.command_option_values}")
                     return  # 成功解析命令，退出函数
-            except json.JSONDecodeError as e:
-                print(f"JSON decode error in parse_addition: {e}")  # 如果解析失败，打印错误
+            except Exception as e:
+                print(f"Error in parse_command: {e}")
 
-        # 如果 addition 字段没有命令信息，尝试从消息内容解析
+        # 如果 command_info 字段没有命令信息，尝试从消息内容解析
         self.parse_command_from_content()
 
     def parse_command_from_content(self):

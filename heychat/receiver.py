@@ -6,7 +6,7 @@ import asyncio
 import json
 
 from .message import Message
-from .event import Event
+from .event import Event, create_event
 import ssl
 import logging
 from .adapter import adapt_type_5_message
@@ -42,6 +42,7 @@ class Receiver:
             'chat_os_type': 'bot',
             'chat_version': '1.24.5'
         }
+        self.gate = bot.client.gate
         self.is_connected = False
         self.close = False
         self.message_queue = asyncio.Queue()
@@ -148,14 +149,16 @@ class Receiver:
 
         event_type = data.get('type')
 
-        if event_type == '5' :
+        if event_type == '50' and not data['data'].get('command_info').get('id'):
+            # 此情况适用于用户发生了一条未被注册的指令，50消息不会包含任何内容
+            return
+
+        if event_type == '5':
             data = adapt_type_5_message(data)
 
         self.messages[msg_id] = data
 
         if event_type == '50':  # 消息类型
-            if not data['data'].get('command_info').get('id'):
-                return
             message = Message(data['data'], self.bot)
             # 调试信息
             # print(f"Received message: {message.content}")
@@ -192,10 +195,10 @@ class Receiver:
                     pass
                     # print(f"Command '{command_name}' not found in registered commands.")
         else:
-            event_type = data.get('notify_type')
-            if 'on_event' in self.bot.event_handlers and event_type in self.bot.event_handlers['on_event']:
-                event = Event(data)
-                await self.bot.event_handlers['on_event'][event_type](self.bot, event)
+            event = create_event(data, self.gate)
+            handlers = self.bot.event_handlers.get('on_event', {}).get(event.event_type, [])
+            for handler in handlers:
+                await handler(event)
 
     async def start(self):
         self.session = aiohttp.ClientSession()

@@ -7,6 +7,7 @@ class Guild:
     def __init__(self, data, gate):
         self.id = data.get('room_id')
         self.name = data.get('room_name', None)
+        self.avatar = data.get('room_avatar', None)
         self.gate = gate
 
     async def fetch_roles_list(self):
