@@ -27,6 +27,7 @@ class Client:
             'chat_version': '1.24.5'
         }
 
+    # message related
     async def send(self, target: Union[PublicTextChannel, PublicVoiceChannel], content,
                    msg_type=MessageTypes.MD_WITH_MENTION):
         return (await target.send(content, msg_type))
@@ -48,6 +49,7 @@ class Client:
         return await self.gate.exec_req(api.Message.delete(msg_id, room_id, channel_id))
 
 
+    # guild roles related
     async def fetch_roles_list(self, room_id):
         return await self.gate.exec_req(api.GuildRole.list(room_id))
 
@@ -91,6 +93,25 @@ class Client:
     async def delete_role(self, role_id, room_id):
         return await self.gate.exec_req(api.GuildRole.delete(role_id, room_id))
 
+    async def grant_role(self, user_id, role_id, room_id):
+        return await self.gate.exec_req(api.GuildRole.grant(user_id, role_id, room_id))
+
+    async def revoke_role(self, user_id, role_id, room_id):
+        return await self.gate.exec_req(api.GuildRole.revoke(user_id, role_id, room_id))
+
+
+    # guild emoji related
+    async def fetch_emoji_list(self, room_id):
+        return await self.gate.exec_req(api.GuildEmoji.list(room_id))
+
+    async def delete_emoji(self, emoji_id, room_id):
+        return await self.gate.exec_req(api.GuildEmoji.delete(emoji_id, room_id))
+
+    async def edit_emoji(self, emoji_id, name, room_id):
+        return await self.gate.exec_req(api.GuildEmoji.edit(emoji_id, name, room_id))
+
+
+    # asset related
     async def upload(self, file):
         """
         :param file: file path or binary data
@@ -108,4 +129,6 @@ class Client:
     async def start(self):
         self.session = aiohttp.ClientSession()
         await asyncio.gather(self.gate.run())
+
+
 

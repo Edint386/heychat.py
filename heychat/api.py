@@ -73,19 +73,19 @@ class Message:
     # 发送消息
     @classmethod
     @req('POST', '/chatroom/v2/channel_msg/send')
-    def create(self, channel_id, msg_type, room_id, msg=None, **kwargs):
+    def create(cls, channel_id, msg_type, room_id, msg=None, **kwargs):
         """Send a message to a channel."""
         pass
 
     @classmethod
     @req('POST', '/chatroom/v2/channel_msg/update')
-    def update(self, msg_id, msg, room_id, channel_id, **kwargs):
+    def update(cls, msg_id, msg, room_id, channel_id, **kwargs):
         """Update existed message"""
         pass
 
     @classmethod
     @req('POST', '/chatroom/v2/channel_msg/delete')
-    def delete(self, msg_id, room_id, channel_id):
+    def delete(cls, msg_id, room_id, channel_id):
         """Delete a message"""
         pass
 
@@ -95,27 +95,63 @@ class GuildRole:
 
     @classmethod
     @req('GET', '/roles')
-    def list(self, room_id):
+    def list(cls, room_id):
         """Get roles of a room."""
         pass
 
     @classmethod
     @req('POST', '/create')
-    def create(self, name, room_id, permissions, type, hoist, nonce, icon, color, color_list, position):
+    def create(cls, name, room_id, permissions, type, hoist, nonce, icon, color, color_list, position):
         """Create a role."""
         pass
 
     @classmethod
     @req('POST', '/update')
-    def update(self, id, name, room_id, permissions, type, hoist, nonce, icon, color, color_list, position):
+    def update(cls, id, name, room_id, permissions, type, hoist, nonce, icon, color, color_list, position):
         """Update a role."""
         pass
 
     @classmethod
     @req('POST', '/delete')
-    def delete(self, role_id, room_id):
+    def delete(cls, role_id, room_id):
         """Delete a role."""
         pass
+
+    @classmethod
+    @req('POST', '/grant')
+    def grant(cls, to_user_id, role_id, room_id):
+        """Grant a role to a user."""
+        pass
+
+    @classmethod
+    @req('POST', '/revoke')
+    def revoke(cls, to_user_id, role_id, room_id):
+        """Revoke a role from a user."""
+        pass
+
+class GuildEmoji:
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v3/msg/meme/room'
+
+    @classmethod
+    @req('GET', '/list')
+    def list(cls, room_id):
+        """Get emojis of a room."""
+        pass
+
+    @classmethod
+    @req('POST', '/del')
+    def delete(cls, path, room_id):
+        """Delete an emoji."""
+        pass
+
+    @classmethod
+    @req('POST', '/edit')
+    def edit(cls, path, name, room_id):
+        """Edit an emoji."""
+        pass
+
+
+
 
 class File:
     base_url: str = 'https://chat-upload.xiaoheihe.cn'
@@ -123,7 +159,7 @@ class File:
     # 上传文件
     @classmethod
     @req('POST', '/upload', headers={'Content-Type': 'multipart/form-data'})
-    def upload(self,file):
+    def upload(cls, file):
         """Upload a file."""
         pass
 

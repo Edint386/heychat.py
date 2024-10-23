@@ -12,7 +12,22 @@ class Guild:
     async def fetch_roles_list(self):
         await self.gate.exec_req(api.GuildRole.list(self.id))
 
-    async def create_role(self, role_id, name, permissions, type=GuildRoleTypes.DEFAULT, hoist=False, icon=None,
+    async def create_role(self, name, permissions, type=GuildRoleTypes.DEFAULT, hoist=False, icon=None,
+                          color=None, color_list=None, position=None):
+        data = {
+            'room_id': self.id,
+            'name': name,
+            'permissions': permissions,
+            'type': type,
+            'hoist': hoist,
+            'icon': icon,
+            'color': color,
+            'color_list': color_list,
+            'position': position
+        }
+        return await self.gate.exec_req(api.GuildRole.update(**{k: v for k, v in data.items() if v is not None}))
+
+    async def update_role(self, role_id, name, permissions, type=GuildRoleTypes.DEFAULT, hoist=False, icon=None,
                           color=None, color_list=None, position=None):
         data = {
             'role_id': role_id,
@@ -30,3 +45,18 @@ class Guild:
 
     async def delete_role(self, role_id):
         return await self.gate.exec_req(api.GuildRole.delete(role_id, self.id))
+
+    async def grant_role(self, user_id, role_id):
+        return await self.gate.exec_req(api.GuildRole.grant(user_id, role_id, self.id))
+
+    async def revoke_role(self, user_id, role_id):
+        return await self.gate.exec_req(api.GuildRole.revoke(user_id, role_id, self.id))
+
+    async def fetch_emoji_list(self):
+        return await self.gate.exec_req(api.GuildEmoji.list(self.id))
+
+    async def delete_emoji(self, emoji_id):
+        return await self.gate.exec_req(api.GuildEmoji.delete(emoji_id, self.id))
+
+    async def edit_emoji(self, emoji_id, name):
+        return await self.gate.exec_req(api.GuildEmoji.edit(emoji_id, name, self.id))
