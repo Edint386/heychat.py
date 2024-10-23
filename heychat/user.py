@@ -5,7 +5,7 @@ from .role import Role
 
 class User:
     def __init__(self, data):
-        self.id: int = data.get('user_id')
+        self.id: int = int(data.get('user_id'))
         self.username: str = data.get('nickname', None)
         self.nickname: str = data.get('room_nickname', None) or self.username
         self.avatar: str = data.get('avatar', None)
