@@ -3,9 +3,10 @@ Python SDK for HeyChat
 
 [![pypi version](https://img.shields.io/pypi/v/khl.py?label=latest&logo=pypi)](https://pypi.org/project/heychat/)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Edint386/heychat.py?logo=github)
-[![khl server](https://www.kaiheila.cn/api/v3/badge/guild?guild_id=4735647834857317&style=3)](https://kook.top/D2m28x)
 ![github stars](https://img.shields.io/github/stars/Edint386/heychat.py?style=social)
-[![khl server](https://api.heibot.cn/badge/server?text=heychat.py)](https://chat.xiaoheihe.cn/idm3x0tv)
+
+[![khl server](https://www.kaiheila.cn/api/v3/badge/guild?guild_id=4735647834857317&style=3)](https://kook.top/D2m28x)
+[![heychat server](https://api.heibot.cn/badge/server?text=heychat.py)](https://chat.xiaoheihe.cn/idm3x0tv)
 
 ## 安装
 ```shell
