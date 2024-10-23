@@ -155,6 +155,7 @@ class Receiver:
 
         if event_type == '5':
             data = adapt_type_5_message(data)
+            event_type = '50'
 
         self.messages[msg_id] = data
 
