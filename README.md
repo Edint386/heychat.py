@@ -29,111 +29,124 @@ async def hello(msg: Message):
 bot.run()
 ```
 
-## 更多功能
-<details>
-    <summary> ✅ 命令参数处理</summary>
+## 功能示例
 
-    from heychat import Bot, Message
-    from random import randint
+### 命令参数处理
+```python
+from heychat import Bot, Message
+from random import randint
+
+bot = Bot('your_token')
+
+@bot.command('roll')
+async def roll(msg: Message,max_num):
+    # 需先前往小黑盒开发平台为注册指令添加变量
+    # 如果没有添加变量单纯输入 /roll 100 也可解析（将在官方关闭type5后失效）
+    max_num = int(max_num)
     
-    bot = Bot('your_token')
+    await msg.reply(f"你掷出了{randint(1,max_num)}") # 回复消息
+    await msg.ctx.channel.send(f"你掷出了{randint(1,max_num)}") # 发送消息
 
-    @bot.command('roll')
-    async def hello(msg: Message,max_num):
-        # 需先前往小黑盒开发平台为注册指令添加变量
-        # 如果没有添加变量单纯输入 /roll 100 也可解析
-        max_num = int(max_num)
-        await msg.reply(f"你掷出了{randint(1,max_num)}")
+bot.run()
+```
 
-    bot.run()
+### 获取消息内容
+```python
+from heychat import Bot, Message
 
-</details>
-<details>
-    <summary> ✅ 获取基础信息</summary>
+bot = Bot('your_token')
 
-    from heychat import Bot, Message
+@bot.on_message()
+async def on_message(msg: Message):
+    # 用户
+    print(msg.author.username) # 用户名
+    print(msg.author.nickname) # 房间昵称
+    print(msg.author.id)       # 用户ID
 
-    bot = Bot('your_token')
-
-    @bot.on_message()
-    async def on_message(msg: Message):
-        # 用户
-        print(msg.author.username) # 用户名
-        print(msg.author.nickname) # 房间昵称
-        print(msg.author.id)       # 用户ID
+    # 消息
+    print(msg.content)         # 消息内容
+    print(msg.msg_timestamp)   # 消息时间戳
     
-        # 消息
-        print(msg.content)         # 消息内容
-        print(msg.msg_timestamp)   # 消息时间戳
-        
-        # 房间
-        print(msg.ctx.guild.id)    # 房间ID
-        print(msg.ctx.guild.name)  # 房间名
-        
-        # 频道
-        print(msg.ctx.channel.id)  # 频道ID
-        print(msg.ctx.channel.name)# 频道名
-        
-
-    bot.run()
-
-</details>
-<details>
-    <summary> ✅ MD构建</summary>
+    # 房间
+    print(msg.ctx.guild.id)    # 房间ID
+    print(msg.ctx.guild.name)  # 房间名
     
-    import MDMessage
-    @bot.on_message()
-    async def on_message(msg: Message):
+    # 频道
+    print(msg.ctx.channel.id)  # 频道ID
+    print(msg.ctx.channel.name)# 频道名
+    
 
-        img_path = "./img.png"
-        await upload_img(img_path)
+bot.run()
+```
 
-        md_msg = MDMessage()
-        md_msg.apeend("这是一段文字")
-        md_msg.append(Element.TEXT("这也是一段文字"))
-        md_msg.append(Element.MENTION("18661718")) # @
-        md_msg.append(Element.IMG("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"))
+### 上传图片 + 富文本构建
+```python
+from heychat import Bot, Message, MDMessage, Element
 
-        # or
-        
-        md_msg = MDMessage("这是一段文字\n",
-                            Element.TEXT("这也是一段文字"),
-                            Element.IMG("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"),
-                            Element.MENTION("18661718"))
-        
+bot = Bot('your_token')
 
-        await msg.reply(md_msg)
+@bot.command('hello')
+async def hello(msg: Message):
 
-</details>
+    img_path = "./img.png"
+    img_url = await bot.client.upload(img_path) # 上传图片
+
+    md_msg = MDMessage()
+    md_msg.append("这是一段文字\n\n")
+    md_msg.append(Element.TEXT("这也是一段文字\n\n"))
+    md_msg.append(Element.MENTION("18661718")) # @
+    md_msg.append(Element.MENTION("all")) # @全体成员
+    md_msg.append(Element.MENTION("here")) # @在线成员
+    md_msg.append(Element.IMG("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"))
+
+    # or
+    
+    md_msg = MDMessage("这是一段文字\n\n",
+               Element.TEXT("这也是一段文字\n\n"),
+               Element.IMG("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"),
+               Element.MENTION("18661718"))
+
+    await msg.reply(md_msg)
+```
+
+### 事件处理
+```python
+from heychat import Bot, EventTypes, GuildMemberEvent, ReactionEvent
+
+bot = Bot('your_token')
+
+@bot.on_event(EventTypes.JOINED_GUILD)
+async def on_joined_guild(e: GuildMemberEvent):
+    # 获取频道以发送消息
+    channel = await bot.client.fetch_channel(e.guild.id, "你的欢迎频道id")
+    await channel.send(f"欢迎{e.user.username} 加入 {e.guild.name} !")
+    
+    
+@bot.on_event(EventTypes.LEFT_GUILD)
+async def on_left_guild(e: GuildMemberEvent):
+    channel = await bot.client.fetch_channel(e.guild.id, "频道id")
+    await channel.send(f"{e.user.username} 永远的离开了我们🙏")
+    
+
+@bot.on_event(EventTypes.ADDED_REACTION)
+async def on_added_reaction(e: ReactionEvent):
+    channel = await bot.client.fetch_channel(e.guild_id, e.channel_id)
+    await channel.send(f"{e.user_id} 给消息 {e.msg_id} 添加了表情 {e.emoji}")
+    
+bot.run()
+```
 
 
-<details>
-    <summary> ✅ 支持更多指令变量类型</summary>
-
-    已经看了，觉得不需要适配现在的够用了，如果有具体需求欢迎提出
-
-</details>
 
 
-<details>
-    <summary> ✅ 从type5转移至type50</summary>
 
-    （划掉）等什么时候官方把type5删了再写（划掉）已经写了
+## TODO
+- ✅ MD构建
+- ✅ 从 type5 转移至 type50
+- ✅ 事件处理
+- ❌ 日志
 
 
-</details>
-<details>
-    <summary> ✅ 事件处理</summary>
-
-    from heychat import Bot, EventTypes, GuildMemberEvent
-    @bot.on_event(EventTypes.JOINED_GUILD)
-    async def on_joined_guild(e: GuildMemberEvent):
-        print(f"{e.user.username}加入了{e.guild.name}")
-
-</details>
-<details>
-    <summary> ❌ 日志</summary>
-</details>
 
 
 ## 贡献
