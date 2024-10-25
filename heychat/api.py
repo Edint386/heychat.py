@@ -1,6 +1,6 @@
 import functools
+from uuid import uuid4
 import aiohttp
-
 
 class _Req:
     def __init__(self, method, route, params):
@@ -25,8 +25,11 @@ def req(method: str, route: str, **http_fields):
             # 将位置参数和关键字参数合并
             params = dict(zip(param_names, args))
             params.update(kwargs)
+            if 'heychat_ack_id' in param_names and 'heychat_ack_id' not in params:
+                params['heychat_ack_id'] = str(uuid4())
             # 处理请求参数
             payload = _merge_params(method, http_fields, params)
+
             return _Req(method, base_url + route, payload)
 
 
@@ -38,9 +41,13 @@ def req(method: str, route: str, **http_fields):
 def _merge_params(method: str, http_fields: dict, req_args: dict) -> dict:
     payload_key = 'params'
     payload = req_args
+
+
     if method == 'POST':
+        print(payload)
         payload_key = 'json'
         content_type = http_fields.get('headers', {}).get('Content-Type', None)
+
         if content_type == 'multipart/form-data':
             payload_key, payload = _build_form_payload(req_args)
             http_fields = _remove_content_type(http_fields)
@@ -73,14 +80,14 @@ class Message:
     # 发送消息
     @classmethod
     @req('POST', '/chatroom/v2/channel_msg/send')
-    def create(cls, channel_id, msg_type, room_id, msg=None, **kwargs):
+    def create(cls, channel_id, msg_type, room_id, msg, heychat_ack_id, **kwargs):
         """Send a message to a channel."""
         pass
 
     @classmethod
     @req('POST', '/chatroom/v2/channel_msg/update')
-    def update(cls, msg_id, msg, room_id, channel_id, **kwargs):
-        """Update existed message"""
+    def update(cls, msg_id, msg, room_id, channel_id, heychat_ack_id, **kwargs):
+        """Update existing message."""
         pass
 
     @classmethod
