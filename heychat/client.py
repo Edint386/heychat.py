@@ -5,6 +5,7 @@ from typing import Union
 import aiohttp
 
 from . import api
+from .guild import Guild
 from ._types import MessageTypes, GuildRoleTypes
 from .channel import PublicTextChannel, PublicVoiceChannel
 from .gateway import Gateway
@@ -27,7 +28,7 @@ class Client:
             'chat_version': '1.24.5'
         }
 
-    async def fetch_channel(self, guild_id, channel_id):
+    async def fetch_channel(self, guild_id, channel_id) -> PublicTextChannel:
         '''not implemented, return a dummy channel'''
         return PublicTextChannel({'channel_base_info': {'channel_id': channel_id},'room_base_info': {'room_id': guild_id}}, self.gate)
 
@@ -53,6 +54,11 @@ class Client:
 
     async def delete_message(self, msg_id, room_id, channel_id):
         return await self.gate.exec_req(api.Message.delete(msg_id, room_id, channel_id))
+
+
+    #guild related
+    async def fetch_guild(self, guild_id) -> Guild:
+        return Guild({'room_id': guild_id}, self.gate)
 
 
     # guild roles related
