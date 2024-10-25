@@ -1,8 +1,6 @@
-import time
+# request.py
 
 import aiohttp
-import random
-
 from .api import _Req
 
 
@@ -40,16 +38,17 @@ class Requester:
         """
         Executes a raw HTTP request.
         """
+
         url = route
         headers = headers or {}
         params = params or {}
         # Merge default headers and params
         merged_headers = {**self.default_headers, **headers}
         merged_params = {**self.default_params, **params}
-        merged_params['heychat_ack_id'] = int(time.time())
 
         if not self.session:
             await self.initialize_session()
+
 
         async with self.session.request(method, url, headers=merged_headers, params=merged_params, **kwargs) as resp:
             response_data = await resp.json()
