@@ -44,7 +44,6 @@ def _merge_params(method: str, http_fields: dict, req_args: dict) -> dict:
 
 
     if method == 'POST':
-        print(payload)
         payload_key = 'json'
         content_type = http_fields.get('headers', {}).get('Content-Type', None)
 
