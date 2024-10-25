@@ -28,6 +28,7 @@ class ReactionEvent(Event):
     def __init__(self, data, gate):
         super().__init__(data, gate)
         self.channel_id = self.data.get('channel_id')
+        self.guild_id = self.data.get('room_id')
         self.msg_id = self.data.get('msg_id')
         self.user_id = self.data.get('user_id')
         self.emoji = self.data.get('emoji')
