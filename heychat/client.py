@@ -28,15 +28,9 @@ class Client:
             'chat_version': '1.24.5'
         }
 
-    async def fetch_channel(self, guild_id, channel_id) -> PublicTextChannel:
-        '''not implemented, return a dummy channel'''
-        return PublicTextChannel({'channel_base_info': {'channel_id': channel_id},'room_base_info': {'room_id': guild_id}}, self.gate)
-
     # message related
-    async def send(self, target: Union[PublicTextChannel, str], content,
-                   msg_type=MessageTypes.MD_WITH_MENTION,guild_id=None):
-        if isinstance(target, str):
-            target = await self.fetch_channel(guild_id, target)
+    async def send(self, target: PublicTextChannel, content,
+                   msg_type=MessageTypes.MD_WITH_MENTION,):
         return (await target.send(content, msg_type))
 
     async def update_message(self, msg_id, content, room_id, channel_id,
@@ -56,6 +50,12 @@ class Client:
         return await self.gate.exec_req(api.Message.delete(msg_id, room_id, channel_id))
 
 
+    # channel related
+    async def fetch_channel(self, guild_id, channel_id) -> PublicTextChannel:
+        '''not implemented, return a dummy channel'''
+        return PublicTextChannel({'channel_base_info': {'channel_id': channel_id},'room_base_info': {'room_id': guild_id}}, self.gate)
+
+
     #guild related
     async def fetch_guild(self, guild_id) -> Guild:
         return Guild({'room_id': guild_id}, self.gate)
@@ -71,20 +71,14 @@ class Client:
             'name': name,
             'room_id': room_id,
             'permissions': permissions,
-            'type': type
-        }
-
-        optional_params = {
+            'type': type,
             'hoist': hoist,
             'icon': icon,
             'color': color,
             'color_list': color_list,
             'position': position
         }
-
-        data.update({key: value for key, value in optional_params.items() if value is not None})
-
-        return await self.gate.exec_req(api.GuildRole.create(**data))
+        return await self.gate.exec_req(api.GuildRole.update(**{k: v for k, v in data.items() if v is not None}))
 
     async def update_role(self, role_id, room_id, name, permissions, type=GuildRoleTypes.DEFAULT,
                           hoist=False,icon=None, color=None, color_list=None, position=None):
