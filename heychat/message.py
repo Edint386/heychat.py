@@ -78,11 +78,17 @@ class Message:
             # 调试信息
             # print("No command found in content.")
 
-        # 匹配： /command option1:value1 option2:value2 ...
-        # 提取但单独的value
-
     async def reply(self, content: Union[str,MDMessage], msg_type=MessageTypes.MD_WITH_MENTION):
         return await self.ctx.channel.send(content, msg_type, reply_id=self.id)
 
     async def delete(self):
         return await self.ctx.channel.delete_message(self.id)
+
+
+class SelfMessage(Message):
+    def __init__(self, data, bot):
+        super().__init__(data, bot)
+        self.is_self = True
+
+    async def update(self, content: Union[str, MDMessage], msg_type=MessageTypes.MD_WITH_MENTION):
+        return await self.ctx.channel.update_message(self.id, content, msg_type, self.ctx.channel.id, reply_id=self.id)
