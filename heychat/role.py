@@ -21,4 +21,4 @@ class Role:
 
 
     def has_permission(self, bit_value: int) -> bool:
-        raise NotImplementedError
+        return self.permissions & bit_value == bit_value
