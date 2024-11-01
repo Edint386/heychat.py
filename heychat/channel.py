@@ -50,6 +50,12 @@ class PublicChannel:
     async def delete_message(self, msg_id:str):
         return await self.gate.exec_req(api.Message.delete(msg_id, self.guild_id, self.id))
 
+    async def add_reaction(self, msg_id:str, emoji:str):
+        return await self.gate.exec_req(api.Message.reply_emoji(msg_id, emoji,1, self.id, self.guild_id))
+
+    async def delete_reaction(self, msg_id:str, emoji:str):
+        return await self.gate.exec_req(api.Message.reply_emoji(msg_id, emoji,2, self.id, self.guild_id))
+
 
 class PublicTextChannel(PublicChannel):
     def __init__(self, data, gate):

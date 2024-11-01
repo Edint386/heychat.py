@@ -84,6 +84,13 @@ class Message:
     async def delete(self):
         return await self.ctx.channel.delete_message(self.id)
 
+    async def add_reaction(self, emoji):
+        return await self.ctx.channel.add_reaction(self.id, emoji)
+
+    async def delete_reaction(self, emoji):
+        return await self.ctx.channel.delete_reaction(self.id, emoji)
+
+
 
 class SelfMessage(Message):
     def __init__(self, data, bot):

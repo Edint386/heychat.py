@@ -74,26 +74,33 @@ def _build_form_payload(req_args: dict):
 
 class Message:
     """Class containing API methods."""
-    base_url: str = 'https://chat.xiaoheihe.cn'
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/channel_msg'
 
     # 发送消息
     @classmethod
-    @req('POST', '/chatroom/v2/channel_msg/send')
+    @req('POST', '/send')
     def create(cls, channel_id, msg_type, room_id, msg, heychat_ack_id, **kwargs):
         """Send a message to a channel."""
         pass
 
     @classmethod
-    @req('POST', '/chatroom/v2/channel_msg/update')
+    @req('POST', '/update')
     def update(cls, msg_id, msg, room_id, channel_id, heychat_ack_id, **kwargs):
         """Update existing message."""
         pass
 
     @classmethod
-    @req('POST', '/chatroom/v2/channel_msg/delete')
+    @req('POST', '/delete')
     def delete(cls, msg_id, room_id, channel_id):
         """Delete a message"""
         pass
+
+    @classmethod
+    @req('POST', '/emoji/reply')
+    def reply_emoji(cls, msg_id, emoji, is_add, channel_id, room_id):
+        """Add/Remove emoji reaction to a message."""
+        pass
+
 
 
 class GuildRole:
