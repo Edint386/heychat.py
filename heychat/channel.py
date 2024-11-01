@@ -54,7 +54,7 @@ class PublicChannel:
         return await self.gate.exec_req(api.Message.reply_emoji(msg_id, emoji,1, self.id, self.guild_id))
 
     async def delete_reaction(self, msg_id:str, emoji:str):
-        return await self.gate.exec_req(api.Message.reply_emoji(msg_id, emoji,2, self.id, self.guild_id))
+        return await self.gate.exec_req(api.Message.reply_emoji(msg_id, emoji,0, self.id, self.guild_id))
 
 
 class PublicTextChannel(PublicChannel):
