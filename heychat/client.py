@@ -127,7 +127,7 @@ class Client:
                 res = await self.gate.exec_req(api.File.upload(f))
         else:
             res = await self.gate.exec_req(api.File.upload(file))
-        return res['result']['url']
+        return res['url']
 
     async def requestor(self, method, endpoint, **kwargs):
         return await self.gate.request(method, endpoint, **kwargs)
