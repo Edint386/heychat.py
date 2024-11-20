@@ -12,8 +12,8 @@ from ._types import MessageTypes, EventTypes, ChannelTypes, GuildRoleTypes
 from .event import Event, ReactionEvent, GuildMemberEvent, BtnClickEvent
 from .role import Role
 from . import api
-from .mdmessage import MDMessage
-from .mdmessage import Element as MDElement
+from .mdmessage import MDMessage, MDElement
+
 
 __all__ = [
     'Bot',
@@ -35,5 +35,6 @@ __all__ = [
     'Role',
     'api',
     'MDMessage',
-    'MDElement'
+    'MDElement',
+    'BtnClickEvent'
 ]
