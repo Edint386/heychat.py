@@ -45,7 +45,7 @@ class Module:
                 else:
                     self.elements.append(element)
             # 按钮/图片 不能和多个文本混合
-            if len(self.elements) > 1:
+            if len(self.elements) > 2:
                 if any([isinstance(element, (Element.Image, Element.Button)) for element in self.elements]):
                     raise ValueError("Image/Button cannot be mixed with multiple text elements")
 
