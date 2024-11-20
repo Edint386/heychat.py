@@ -81,7 +81,7 @@ bot.run()
 
 ### 上传图片 + 富文本构建
 ```python
-from heychat import Bot, Message, MDMessage, Element
+from heychat import Bot, Message, MDMessage, MDElement
 
 bot = Bot('your_token')
 
@@ -93,18 +93,18 @@ async def hello(msg: Message):
 
     md_msg = MDMessage()
     md_msg.append("这是一段文字\n\n")
-    md_msg.append(Element.TEXT("这也是一段文字\n\n"))
-    md_msg.append(Element.MENTION("18661718")) # @
-    md_msg.append(Element.MENTION("all")) # @全体成员
-    md_msg.append(Element.MENTION("here")) # @在线成员
-    md_msg.append(Element.IMG("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"))
+    md_msg.append(MDElement.Text("这也是一段文字\n\n"))
+    md_msg.append(MDElement.Mention("18661718")) # @
+    md_msg.append(MDElement.Mention("all")) # @全体成员
+    md_msg.append(MDElement.Mention("here")) # @在线成员
+    md_msg.append(MDElement.Image("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"))
 
     # or
     
     md_msg = MDMessage("这是一段文字\n\n",
-               Element.TEXT("这也是一段文字\n\n"),
-               Element.IMG("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"),
-               Element.MENTION("18661718"))
+               MDElement.Text("这也是一段文字\n\n"),
+               MDElement.Image("https://chat.max-c.com/attachments/2024-09-15/1835322670233686016_UitVbhhcLf.jpg"),
+               MDElement.Mention("18661718"))
 
     await msg.reply(md_msg)
 ```
@@ -136,7 +136,54 @@ async def on_added_reaction(e: ReactionEvent):
 bot.run()
 ```
 
+### 卡片消息
+```python
+from heychat import Bot, Message, EventTypes, BtnClickEvent
+from heychat.card import Card, CardMessage, Module, Element, Types
+import time
 
+bot = Bot('your_token')
+
+@bot.command('hey')
+async def card(msg: Message):
+    c = Card()
+    c.append(Module.Header('这是一张卡片'))
+    c.append(Module.Divider())
+    c.append(Module.Section('heychat.py 好用吗？'))
+    c.append(Module.ButtonGroup(Element.Button('好用', 'good',Types.Event.SERVER),
+                                Element.Button('不好用', 'bad',Types.Event.SERVER,Types.Theme.DEFAULT)))
+    cm = CardMessage(c)
+    await msg.reply(cm)
+    
+    # 更多模块
+    # 单图
+    c.append(Module.ImageGroup('https://imgheybox.max-c.com/web/bbs/2024/11/20/1e73470c46e4bb51fcc06c1c5522a66b.png'))
+    # 多图
+    c.append(Module.ImageGroup('https://imgheybox.max-c.com/web/bbs/2024/11/20/1e73470c46e4bb51fcc06c1c5522a66b.png',
+                          '{图片链接}',
+                          '{图片链接}'))
+    # 文字 + 图片
+    c.append(Module.Section('这是一段文字',Element.Image('https://imgheybox.max-c.com/web/bbs/2024/11/20/1e73470c46e4bb51fcc06c1c5522a66b.png')))
+    # 文字 + 按钮
+    c.append(Module.Section('这是一段文字',Element.Button('点击跳转','{链接}',Types.Event.LINK)))
+    # 文字分割线
+    c.append(Module.Divider('这是一条分割线'))
+    # 倒计时
+    c.append(Module.Countdown(time.time() + 60, Types.CountdownMode.SECOND))
+    
+    # 多张卡片
+    c2 = Card()
+    c2.append(Module.Header('这是第二张卡片'))
+    cm.append(c2)
+
+# 按钮点击事件示例
+@bot.on_event(EventTypes.BTN_CLICKED)
+async def on_btn_click(e: BtnClickEvent):
+    if e.value == 'good':
+        await e.channel.send('开心(*^▽^*)')
+    elif e.value == 'bad':
+        await e.channel.send('难过(´；ω；`)')
+```
 
 
 
@@ -144,6 +191,7 @@ bot.run()
 - ✅ MD构建
 - ✅ 从 type5 转移至 type50
 - ✅ 事件处理
+- ✅ 卡片消息
 - ❌ 日志
 
 
