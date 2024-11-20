@@ -29,8 +29,9 @@ class Client:
         }
 
     # message related
-    async def send(self, target: PublicTextChannel, content,
-                   msg_type=MessageTypes.MD_WITH_MENTION,):
+    async def send(self, target: PublicTextChannel, content: Union[str, dict],
+                   msg_type: MessageTypes = MessageTypes.MD_WITH_MENTION):
+
         return (await target.send(content, msg_type))
 
     async def update_message(self, msg_id, content, room_id, channel_id,
