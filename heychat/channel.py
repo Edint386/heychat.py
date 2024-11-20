@@ -5,7 +5,7 @@ from typing import Union
 from ._types import ChannelTypes, MessageTypes
 from . import api
 from .gateway import Gateway
-from .mdmessage import MDMessage, Element
+from .mdmessage import MDMessage
 
 
 class PublicChannel:
