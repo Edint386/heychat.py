@@ -44,7 +44,7 @@ class Types:
         PLAIN = "plain-text"
         MD = "markdown"
 
-    class CountDown(Enum):
+    class CountdownMode(Enum):
         DEFAULT = "default"
         CALENDER = "calender"
         SECOND = "second"
