@@ -1,6 +1,8 @@
 # event.py
+import json
 
 from ._types import EventTypes
+from .channel import public_channel_factory
 from .guild import Guild
 from .user import User
 
@@ -59,6 +61,27 @@ class GuildMemberEvent(Event):
             return EventTypes.LEFT_GUILD
         else:
             return None
+
+@register_event('card_message_btn_click')
+class BtnClickEvent(Event):
+    def __init__(self, data, gate):
+        super().__init__(data, gate)
+        self.event_type = EventTypes.BTN_CLICKED
+
+        self.channel = public_channel_factory(self.data, gate)
+        self.guild = Guild(self.data.get('room_base_info', {}), gate)
+        self.user = User(self.data.get('sender_info', {}))
+
+        self.text = self.data.get('text')
+        self.value = self.data.get('value')
+        self.btn_event_type = self.data.get('event')
+
+        self.msg_id = self.data.get('msg_id')
+        self.msg_timestamp = self.data.get('send_time')
+
+
+
+
 
 def create_event(data, gate):
     event_type = data.get('type')
