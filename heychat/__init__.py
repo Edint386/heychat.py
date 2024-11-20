@@ -9,10 +9,11 @@ from .guild import Guild
 from .channel import PublicChannel, PublicVoiceChannel, PublicTextChannel
 from .context import Context
 from ._types import MessageTypes, EventTypes, ChannelTypes, GuildRoleTypes
-from .event import Event, ReactionEvent, GuildMemberEvent
+from .event import Event, ReactionEvent, GuildMemberEvent, BtnClickEvent
 from .role import Role
 from . import api
-from .mdmessage import MDMessage, Element
+from .mdmessage import MDMessage
+from .mdmessage import Element as MDElement
 
 __all__ = [
     'Bot',
@@ -34,5 +35,5 @@ __all__ = [
     'Role',
     'api',
     'MDMessage',
-    'Element'
+    'MDElement'
 ]
