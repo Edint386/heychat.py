@@ -63,7 +63,7 @@ class MDMessage:
         return info
 
 
-class Element:
+class MDElement:
     class Text:
 
         def __init__(self, content: str):
