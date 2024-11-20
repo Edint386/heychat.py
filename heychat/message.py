@@ -4,6 +4,7 @@ import json
 import re
 from typing import Union
 
+from .card import CardMessage
 from .mdmessage import MDMessage
 from ._types import MessageTypes
 from .user import User
@@ -78,7 +79,7 @@ class Message:
             # 调试信息
             # print("No command found in content.")
 
-    async def reply(self, content: Union[str,MDMessage], msg_type=MessageTypes.MD_WITH_MENTION):
+    async def reply(self, content: Union[str,MDMessage,CardMessage], msg_type=MessageTypes.MD_WITH_MENTION):
         return await self.ctx.channel.send(content, msg_type, reply_id=self.id)
 
     async def delete(self):
