@@ -4,6 +4,7 @@ from typing import Union
 
 import aiohttp
 
+
 from . import api
 from .guild import Guild
 from ._types import MessageTypes, GuildRoleTypes
@@ -29,7 +30,7 @@ class Client:
         }
 
     # message related
-    async def send(self, target: PublicTextChannel, content: Union[str, dict],
+    async def send(self, target: Union[PublicTextChannel, PublicVoiceChannel], content: Union[str, dict],
                    msg_type: MessageTypes = MessageTypes.MD_WITH_MENTION):
 
         return (await target.send(content, msg_type))
