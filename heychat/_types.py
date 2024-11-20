@@ -6,6 +6,7 @@ class MessageTypes(IntEnum):
     IMG = 3
     MD = 4
     MD_WITH_MENTION = 10
+    CARD = 20
 
 
 # _types.py
@@ -15,6 +16,7 @@ class EventTypes:
     LEFT_GUILD = 'left_room'
     ADDED_REACTION = 'added_reaction'
     DELETED_REACTION = 'deleted_reaction'
+    BTN_CLICKED = 'card_message_button_click'
 
 
 
