@@ -13,6 +13,10 @@ class CardMessage(dict):
         super().__init__()
         self['data'] = [_get_repr(card) for card in cards]
 
+    def append(self, card: Card):
+        """Append a card to the message."""
+        self['data'].append(_get_repr(card))
+
     def __iter__(self):
         """Override __iter__ to return the serialized representation of the cards."""
         for card in super().__iter__():
