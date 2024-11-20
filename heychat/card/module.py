@@ -100,9 +100,9 @@ class Module:
     class Countdown(_Module):
         """Countdown module."""
 
-        def __init__(self, mode: Union[Types.CountDown, str], end_time: int):
+        def __init__(self, end_time: Union[int, float], mode: Union[Types.CountdownMode, str] = Types.CountdownMode.SECOND):
             self.type = Types._Module.COUNTDOWN
-            self.mode = Types.CountDown(mode) if isinstance(mode, str) else mode
+            self.mode = Types.CountdownMode(mode) if isinstance(mode, str) else mode
             self.end_time = int(end_time)
 
         def _repr(self) -> Dict:
