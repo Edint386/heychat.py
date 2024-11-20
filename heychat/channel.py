@@ -1,4 +1,5 @@
 # channel.py
+import json
 from typing import Union
 
 from ._types import ChannelTypes, MessageTypes
@@ -19,7 +20,9 @@ class PublicChannel:
         self.gate: Gateway = gate  # 添加 gateway 实例
 
     async def send(self, content: Union[str, MDMessage], msg_type = MessageTypes.MD_WITH_MENTION, **kwargs):
-        if isinstance(content, MDMessage):
+        if isinstance(content, dict):
+            req = api.Message.create(self.id, MessageTypes.CARD, self.guild_id, msg=json.dumps(content), **kwargs)
+        elif isinstance(content, MDMessage):
             req = api.Message.create(self.id, MessageTypes.MD_WITH_MENTION, self.guild_id, msg=str(content),
                                          **content.extra_info)
         else:
