@@ -118,7 +118,7 @@ bot = Bot('your_token')
 @bot.on_event(EventTypes.JOINED_GUILD)
 async def on_joined_guild(e: GuildMemberEvent):
     # 获取频道以发送消息
-    channel = await bot.client.fetch_channel(e.guild.id, "你的欢迎频道id")
+    channel = await bot.client.fetch_channel(e.guild.id, "此处填写你的服务器欢迎频道id")
     await channel.send(f"欢迎{e.user.username} 加入 {e.guild.name} !")
     
     
