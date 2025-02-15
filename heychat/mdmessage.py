@@ -42,16 +42,16 @@ class MDMessage:
         user_mentioned = []
         channel_mentioned = []
         for message in self.messages:
-            if isinstance(message, Element.Image):
+            if isinstance(message, MDElement.Image):
                 img_info = {'url': message.src}
                 if message.width:
                     img_info['width'] = message.width
                 if message.height:
                     img_info['height'] = message.height
                 additions.append(img_info)
-            elif isinstance(message, Element.Mention):
+            elif isinstance(message, MDElement.Mention):
                 user_mentioned.append(message.id)
-            elif isinstance(message, Element.Channel):
+            elif isinstance(message, MDElement.Channel):
                 channel_mentioned.append(message.id)
         info = {}
         if additions:
