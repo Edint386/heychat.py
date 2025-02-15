@@ -42,8 +42,11 @@ class PublicChannel:
         if isinstance(content, MDMessage):
             data = {**data, **content.extra_info}
             content = str(content)
+        elif isinstance(content, dict):
+            data['msg_type'] = MessageTypes.CARD
+            content = json.dumps(content)
 
-        data['msg'] = content
+        data['msg'] = str(content)
 
         if reply_id:
             data['reply_id'] = reply_id

@@ -1,5 +1,6 @@
 # client.py
 import asyncio
+import json
 from typing import Union
 
 import aiohttp
@@ -10,6 +11,7 @@ from .guild import Guild
 from ._types import MessageTypes, GuildRoleTypes
 from .channel import PublicTextChannel, PublicVoiceChannel
 from .gateway import Gateway
+from .mdmessage import MDMessage
 
 
 class Client:
@@ -35,15 +37,23 @@ class Client:
 
         return (await target.send(content, msg_type))
 
-    async def update_message(self, msg_id, content, room_id, channel_id,
+    async def update_message(self, msg_id, content, guild_id, channel_id,
                              msg_type=MessageTypes.MD_WITH_MENTION ,reply_id=None, **kwargs):
         data = {
             'msg_id': msg_id,
-            'content': content,
-            'room_id': room_id,
+            'room_id': guild_id,
             'channel_id': channel_id,
             'msg_type': msg_type,
             **kwargs}
+        if isinstance(content, MDMessage):
+            data = {**data, **content.extra_info}
+            content = str(content)
+        elif isinstance(content, dict):
+            data['msg_type'] = MessageTypes.CARD
+            content = json.dumps(content)
+
+        data['content'] = content
+
         if reply_id:
             data['reply_id'] = reply_id
         return await self.gate.exec_req(api.Message.update(**data))
