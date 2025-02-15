@@ -5,7 +5,6 @@ Python SDK for HeyChat
 ![GitHub last commit](https://img.shields.io/github/last-commit/Edint386/heychat.py?logo=github)
 ![github stars](https://img.shields.io/github/stars/Edint386/heychat.py?style=social)
 
-[![khl server](https://www.kaiheila.cn/api/v3/badge/guild?guild_id=4735647834857317&style=3)](https://kook.top/D2m28x)
 [![heychat server](https://api.heibot.cn/badge/server?text=heychat.py)](https://chat.xiaoheihe.cn/idm3x0tv)
 
 ## 安装
