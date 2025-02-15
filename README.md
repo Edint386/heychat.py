@@ -1,7 +1,7 @@
 # heychat.py
 Python SDK for HeyChat
 
-[![pypi version](https://img.shields.io/pypi/v/khl.py?label=latest&logo=pypi)](https://pypi.org/project/heychat/)
+[![pypi version](https://img.shields.io/pypi/v/heychat?label=latest&logo=pypi)](https://pypi.org/project/heychat/)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Edint386/heychat.py?logo=github)
 ![github stars](https://img.shields.io/github/stars/Edint386/heychat.py?style=social)
 
