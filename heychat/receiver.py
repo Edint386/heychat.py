@@ -142,6 +142,9 @@ class Receiver:
 
     async def handle_message(self, data):
         # 检查消息 ID，防止重复处理
+        if isinstance(data, str):
+            return
+
         msg_id = data.get('data', {}).get('msg_id', data.get('sequence'))
 
         if msg_id in self.messages.keys():
