@@ -81,7 +81,7 @@ class Module:
         def _repr(self) -> Dict:
             return {
                 "type": self.type.value,
-                "elements": [element._repr() for element in self.elements]
+                "urls": [{"url":element.url} for element in self.elements]
             }
 
     class ButtonGroup(_Module):
