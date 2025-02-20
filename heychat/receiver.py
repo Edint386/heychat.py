@@ -124,7 +124,7 @@ class Receiver:
                 try:
                     data = json.loads(message)
                     # print(data)
-                    await self.handle_message(data)
+                    asyncio.create_task(self.handle_message(data))
                 except json.JSONDecodeError as e:
                     self.logger.error(f"Failed to decode JSON: {e}")
                     continue  # 解析 JSON 失败，继续处理下一条消息
