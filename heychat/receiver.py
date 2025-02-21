@@ -145,7 +145,8 @@ class Receiver:
         if isinstance(data, str):
             return
         inner_data = data.get('data', {})
-        if isinstance(data, str):
+        # print(data)
+        if isinstance(inner_data, str):
             return
         msg_id = inner_data.get('msg_id', data.get('sequence'))
 
