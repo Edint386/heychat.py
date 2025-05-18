@@ -16,7 +16,7 @@ class Message:
 
         self.id = data.get('msg_id')
         self.content = data.get('msg', None)
-        self.author = User(data.get("sender_info"))
+        self.author = User(data.get("sender_info"), bot.client.gate)
         self.ctx = Context(data, bot.client.gate)
         self.bot = bot
         self.msg_timestamp = data.get('send_time')
