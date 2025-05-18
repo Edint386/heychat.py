@@ -52,7 +52,7 @@ class GuildMemberEvent(Event):
         self.state = self.data.get('state')
         self.event_type = self.determine_event_type()
 
-        self.user = User(self.user_info)
+        self.user = User(self.user_info, gate)
         self.guild = Guild(self.data.get('room_base_info', {}), gate)
 
     def determine_event_type(self):
@@ -71,7 +71,7 @@ class BtnClickEvent(Event):
 
         self.channel = public_channel_factory(self.data, gate)
         self.guild = Guild(self.data.get('room_base_info', {}), gate)
-        self.user = User(self.data.get('sender_info', {}))
+        self.user = User(self.data.get('sender_info', {}), gate)
 
         self.text = self.data.get('text')
         self.value = self.data.get('value')
