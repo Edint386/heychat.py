@@ -178,3 +178,13 @@ class File:
 
     # 可以在这里添加更多的 API 方法
 
+
+class UserMessage:
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v3/msg'
+
+    @classmethod
+    @req('POST', '/user')
+    def send(cls, to_user_id, msg_type, msg, heychat_ack_id, **kwargs):
+        """Send a direct message to a user."""
+        pass
+
