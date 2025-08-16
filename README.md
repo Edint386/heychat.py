@@ -12,8 +12,6 @@ Python SDK for HeyChat
 pip install heychat
 ```
 
-
-
 ## 最简示例
 
 ```python
