@@ -202,6 +202,7 @@ async def on_btn_click(e: BtnClickEvent):
 
 ## 写在最后的省流
 抄的[khl.py](https://github.com/TWT233/khl.py)
+代码小白，很多地方理解不透彻是ai写的，大佬轻喷
 
 
 
