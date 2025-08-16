@@ -10,6 +10,7 @@ from .event import Event, create_event
 import ssl
 import logging
 from .adapter import adapt_type_5_message
+from .context import is_private_message
 from collections import OrderedDict
 
 
@@ -145,6 +146,10 @@ class Receiver:
         if isinstance(data, str):
             return
         inner_data = data.get('data', {})
+        
+            # 调试代码已移除
+        
+        # 下面是原有代码
         # print(data)
         if isinstance(inner_data, str):
             return
@@ -165,7 +170,8 @@ class Receiver:
 
         self.messages[msg_id] = data
 
-        if event_type == '50':  # 消息类型
+        # 处理私聊消息和公共频道消息
+        if event_type == '50' or event_type == 'USER_IM_MESSAGE' or event_type == '5':  # 消息类型
             message = Message(data['data'], self.bot)
             # 调试信息
             # print(f"Received message: {message.content}")
