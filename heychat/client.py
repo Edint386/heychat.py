@@ -67,6 +67,10 @@ class Client:
         '''not implemented, return a dummy channel'''
         return PublicTextChannel({'channel_base_info': {'channel_id': channel_id},'room_base_info': {'room_id': guild_id}}, self.gate)
 
+    async def kick_out_voice_channel_user(self, user_id, room_id, channel_id):
+        """Kick out a user from voice channel."""
+        return await self.gate.exec_req(api.Channel.kick_out(user_id, user_id, room_id, channel_id))
+
 
     #guild related
     async def fetch_guild(self, guild_id) -> Guild:

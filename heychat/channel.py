@@ -75,6 +75,15 @@ class PublicVoiceChannel(PublicChannel):
     def __init__(self, data, gate):
         super().__init__(data, gate)
 
+    async def kick_out(self, user_id):
+        """Kick out a user from this voice channel."""
+        return await self.gate.exec_req(api.Channel.kick_out(
+            to_user_id=user_id,
+            heybox_id=user_id,
+            room_id=self.guild_id, 
+            channel_id=self.id
+        ))
+
 
 class PrivateChannel:
     """私聊频道类，代表与某个用户的私聊会话"""
