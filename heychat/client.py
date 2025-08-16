@@ -67,13 +67,13 @@ class Client:
         '''not implemented, return a dummy channel'''
         return PublicTextChannel({'channel_base_info': {'channel_id': channel_id},'room_base_info': {'room_id': guild_id}}, self.gate)
 
-    async def kick_out_voice_channel_user(self, user_id, room_id, channel_id):
+    async def kick_out_voice_channel_user(self, user_id: int, room_id: str, channel_id: str):
         """Kick out a user from voice channel."""
         return await self.gate.exec_req(api.Channel.kick_out(user_id, user_id, room_id, channel_id))
 
-    async def move_user(self, origin_channel_id: str, user_ids: Union[str, list], room_id: str, target_channel_id: str):
+    async def move_user(self, origin_channel_id: str, user_ids: Union[int, list], room_id: str, target_channel_id: str):
         """Move users from one voice channel to another."""
-        if isinstance(user_ids, str):
+        if isinstance(user_ids, int):
             user_ids = [user_ids]
         return await self.gate.exec_req(api.Channel.move_user(origin_channel_id, user_ids, room_id, target_channel_id))
 
@@ -82,6 +82,14 @@ class Client:
     async def fetch_guild(self, guild_id):
         """Fetch detailed guild information including channels, roles, and members."""
         return await self.gate.exec_req(api.Guild.view(guild_id))
+
+    async def ban_user(self, user_id: int, duration: int, reason: str, room_id: str):
+        """Ban a user from the guild."""
+        return await self.gate.exec_req(api.Guild.ban(duration, reason, room_id, user_id))
+
+    async def unban_user(self, user_id: int, room_id: str):
+        """Unban a user from the guild."""
+        return await self.gate.exec_req(api.Guild.ban(0, "", room_id, user_id))
 
 
     # guild roles related

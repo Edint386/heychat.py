@@ -61,3 +61,11 @@ class Guild:
 
     async def edit_emoji(self, emoji_id, name):
         return await self.gate.exec_req(api.GuildEmoji.edit(emoji_id, name, self.id))
+
+    async def ban_user(self, user_id: int, duration: int, reason: str):
+        """Ban a user from this guild."""
+        return await self.gate.exec_req(api.Guild.ban(duration, reason, self.id, user_id))
+
+    async def unban_user(self, user_id: int):
+        """Unban a user from this guild."""
+        return await self.gate.exec_req(api.Guild.ban(0, "", self.id, user_id))

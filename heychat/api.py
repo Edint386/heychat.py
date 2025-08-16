@@ -265,6 +265,12 @@ class Guild:
         """Get detailed guild information including channels, roles, and members."""
         pass
 
+    @classmethod
+    @req('POST', '/ban')
+    def ban(cls, duration, reason, room_id, to_user_id):
+        """Ban/unban a user from the guild."""
+        pass
+
 
 class UserMessage:
     base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v3/msg'

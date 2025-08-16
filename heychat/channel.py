@@ -75,7 +75,7 @@ class PublicVoiceChannel(PublicChannel):
     def __init__(self, data, gate):
         super().__init__(data, gate)
 
-    async def kick_out(self, user_id):
+    async def kick_out(self, user_id: int):
         """Kick out a user from this voice channel."""
         return await self.gate.exec_req(api.Channel.kick_out(
             to_user_id=user_id,
@@ -84,9 +84,9 @@ class PublicVoiceChannel(PublicChannel):
             channel_id=self.id
         ))
 
-    async def move_user(self, user_ids: Union[str, list], target_channel_id):
+    async def move_user(self, user_ids: Union[int, list], target_channel_id: str):
         """Move users from this voice channel to another channel."""
-        if isinstance(user_ids, str):
+        if isinstance(user_ids, int):
             user_ids = [user_ids]
         return await self.gate.exec_req(api.Channel.move_user(
             origin_channel_id=self.id,
