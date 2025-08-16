@@ -9,8 +9,15 @@ class _Req:
         self.params = params
 
 
-def req(method: str, route: str, **http_fields):
-    """Decorator to create API request methods."""
+def req(method: str, route: str, query_params=None, **http_fields):
+    """Decorator to create API request methods.
+    
+    Args:
+        method: HTTP method
+        route: API route
+        query_params: List of parameter names that should be sent as query parameters
+        **http_fields: Additional HTTP fields like headers
+    """
 
     def decorator(func):
         @functools.wraps(func)
@@ -28,7 +35,7 @@ def req(method: str, route: str, **http_fields):
             if 'heychat_ack_id' in param_names and 'heychat_ack_id' not in params:
                 params['heychat_ack_id'] = str(uuid4())
             # 处理请求参数
-            payload = _merge_params(method, http_fields, params)
+            payload = _merge_params(method, http_fields, params, query_params)
 
             return _Req(method, base_url + route, payload)
 
@@ -38,21 +45,65 @@ def req(method: str, route: str, **http_fields):
     return decorator
 
 
-def _merge_params(method: str, http_fields: dict, req_args: dict) -> dict:
-    payload_key = 'params'
-    payload = req_args
+def _merge_params(method: str, http_fields: dict, req_args: dict, query_params=None) -> dict:
+    """Merge request parameters based on method and query_params specification.
+    
+    Args:
+        method: HTTP method
+        http_fields: Additional HTTP fields
+        req_args: Request arguments from function call
+        query_params: List of parameter names that should be query parameters
+    """
 
+    if query_params is None:
+        payload_key = 'params'
+        payload = req_args
 
-    if method == 'POST':
-        payload_key = 'json'
-        content_type = http_fields.get('headers', {}).get('Content-Type', None)
+        if method == 'POST':
+            payload_key = 'json'
+            content_type = http_fields.get('headers', {}).get('Content-Type', None)
 
-        if content_type == 'multipart/form-data':
-            payload_key, payload = _build_form_payload(req_args)
-            http_fields = _remove_content_type(http_fields)
-        elif content_type is not None and content_type != 'application/json':
-            raise ValueError(f'Unrecognized Content-Type {content_type}')
-    params = {payload_key: payload}
+            if content_type == 'multipart/form-data':
+                payload_key, payload = _build_form_payload(req_args)
+                http_fields = _remove_content_type(http_fields)
+            elif content_type is not None and content_type != 'application/json':
+                raise ValueError(f'Unrecognized Content-Type {content_type}')
+        params = {payload_key: payload}
+        params.update(http_fields)
+        return params
+    
+    query_args = {}
+    body_args = {}
+    
+    for key, value in req_args.items():
+        if key in query_params:
+            query_args[key] = value
+        else:
+            body_args[key] = value
+    
+    params = {}
+    
+    if query_args:
+        params['params'] = query_args
+    
+    if body_args:
+        if method == 'POST':
+            content_type = http_fields.get('headers', {}).get('Content-Type', None)
+            
+            if content_type == 'multipart/form-data':
+                payload_key, payload = _build_form_payload(body_args)
+                params[payload_key] = payload
+                http_fields = _remove_content_type(http_fields)
+            elif content_type is not None and content_type != 'application/json':
+                raise ValueError(f'Unrecognized Content-Type {content_type}')
+            else:
+                params['json'] = body_args
+        else:
+            if 'params' in params:
+                params['params'].update(body_args)
+            else:
+                params['params'] = body_args
+    
     params.update(http_fields)
     return params
 
@@ -187,6 +238,16 @@ class File:
         pass
 
     # 可以在这里添加更多的 API 方法
+
+
+class Channel:
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/channel'
+
+    @classmethod
+    @req('POST', '/kick_out', query_params=['heybox_id', 'room_id', 'channel_id'])
+    def kick_out(cls, to_user_id, heybox_id=None, room_id=None, channel_id=None):
+        """Kick out a user from voice channel."""
+        pass
 
 
 class UserMessage:
