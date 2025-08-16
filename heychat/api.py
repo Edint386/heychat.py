@@ -249,6 +249,12 @@ class Channel:
         """Kick out a user from voice channel."""
         pass
 
+    @classmethod
+    @req('POST', '/move_member')
+    def move_user(cls, origin_channel_id, to_user_ids, room_id, channel_id):
+        """Move users from one voice channel to another."""
+        pass
+
 
 class Guild:
     base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/room'

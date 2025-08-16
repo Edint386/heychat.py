@@ -71,6 +71,12 @@ class Client:
         """Kick out a user from voice channel."""
         return await self.gate.exec_req(api.Channel.kick_out(user_id, user_id, room_id, channel_id))
 
+    async def move_user(self, origin_channel_id: str, user_ids: Union[str, list], room_id: str, target_channel_id: str):
+        """Move users from one voice channel to another."""
+        if isinstance(user_ids, str):
+            user_ids = [user_ids]
+        return await self.gate.exec_req(api.Channel.move_user(origin_channel_id, user_ids, room_id, target_channel_id))
+
 
     #guild related
     async def fetch_guild(self, guild_id):

@@ -84,6 +84,17 @@ class PublicVoiceChannel(PublicChannel):
             channel_id=self.id
         ))
 
+    async def move_user(self, user_ids: Union[str, list], target_channel_id):
+        """Move users from this voice channel to another channel."""
+        if isinstance(user_ids, str):
+            user_ids = [user_ids]
+        return await self.gate.exec_req(api.Channel.move_user(
+            origin_channel_id=self.id,
+            to_user_ids=user_ids,
+            room_id=self.guild_id,
+            channel_id=target_channel_id
+        ))
+
 
 class PrivateChannel:
     """私聊频道类，代表与某个用户的私聊会话"""
