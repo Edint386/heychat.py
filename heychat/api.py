@@ -102,6 +102,16 @@ class Message:
         pass
 
 
+class UserMessage:
+    """用户私聊消息API"""
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v3/msg'
+
+    @classmethod
+    @req('POST', '/user')
+    def send(cls, to_user_id, msg_type, heychat_ack_id, msg=None, img=None, addition="{}", **kwargs):
+        """Send a direct message to a user."""
+        pass
+
 
 class GuildRole:
     base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/room_role'
