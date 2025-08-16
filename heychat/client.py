@@ -73,8 +73,9 @@ class Client:
 
 
     #guild related
-    async def fetch_guild(self, guild_id) -> Guild:
-        return Guild({'room_id': guild_id}, self.gate)
+    async def fetch_guild(self, guild_id):
+        """Fetch detailed guild information including channels, roles, and members."""
+        return await self.gate.exec_req(api.Guild.view(guild_id))
 
 
     # guild roles related

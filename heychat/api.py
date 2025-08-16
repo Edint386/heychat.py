@@ -250,6 +250,16 @@ class Channel:
         pass
 
 
+class Guild:
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/room'
+
+    @classmethod
+    @req('GET', '/view', query_params=['room_id'])
+    def view(cls, room_id):
+        """Get detailed guild information including channels, roles, and members."""
+        pass
+
+
 class UserMessage:
     base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v3/msg'
 
