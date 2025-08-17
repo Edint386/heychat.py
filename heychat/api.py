@@ -262,6 +262,17 @@ class Channel:
         pass
 
 
+class ChannelStream:
+    base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v3/channel/stream'
+
+    @classmethod
+    @req('POST', '/push')
+    def start_stream(cls, room_id, channel_id, stream_url, operator, volume=100, callback_url=None, 
+                    seek_second=None, repeat_num=1, max_duration=None):
+        """开始向语音频道推流。"""
+        pass
+
+
 class Guild:
     base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/room'
 

@@ -1,6 +1,6 @@
 # channel.py
 import json
-from typing import Union
+from typing import Union, Optional
 import uuid
 
 from ._types import ChannelTypes, MessageTypes
@@ -94,6 +94,32 @@ class PublicVoiceChannel(PublicChannel):
             room_id=self.guild_id,
             channel_id=target_channel_id
         ))
+
+    async def start_stream(self, stream_url: str, operator: int = 18661718, volume: int = 100, 
+                          seek_second: Optional[int] = None, repeat_num: int = 1, 
+                          max_duration: Optional[int] = None):
+        """开始向此语音频道推流。
+        
+        Args:
+            max_duration: 最大播放时长（分钟），范围[。设置后会自动将repeat_num设为-1进行循环播放。
+        """
+        # 当有max_duration时自动把repeat_num设为-1
+        if max_duration is not None:
+            repeat_num = -1
+            
+        result = await self.gate.exec_req(api.ChannelStream.start_stream(
+            room_id=self.guild_id,
+            channel_id=self.id,
+            stream_url=stream_url,
+            operator=operator,
+            volume=volume,
+            callback_url=None,
+            seek_second=seek_second,
+            repeat_num=repeat_num,
+            max_duration=max_duration
+        ))
+        
+        return result['task_id']
 
 
 class PrivateChannel:

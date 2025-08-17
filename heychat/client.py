@@ -1,7 +1,7 @@
 # client.py
 import asyncio
 import json
-from typing import Union
+from typing import Union, Optional
 
 import aiohttp
 
@@ -80,6 +80,24 @@ class Client:
     async def find_user_channel(self, user_id: int, room_id: str):
         """Find which channel a user is currently in."""
         return await self.gate.exec_req(api.Channel.which_user(user_id, room_id))
+
+    async def start_stream(self, room_id: str, channel_id: str, stream_url: str, operator: int = 18661718, 
+                          volume: int = 100, seek_second: Optional[int] = None, 
+                          repeat_num: int = 1, max_duration: Optional[int] = None):
+        """开始向语音频道推流。
+        
+        Args:
+            max_duration: 最大播放时长（分钟）。设置后会自动将repeat_num设为-1进行循环播放。
+        """
+        # 当有max_duration时自动把repeat_num设为-1
+        if max_duration is not None:
+            repeat_num = -1
+            
+        result = await self.gate.exec_req(api.ChannelStream.start_stream(
+            room_id, channel_id, stream_url, operator, volume, None, 
+            seek_second, repeat_num, max_duration))
+        
+        return result['task_id']
 
 
     #guild related
