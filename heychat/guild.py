@@ -69,3 +69,7 @@ class Guild:
     async def unban_user(self, user_id: int):
         """Unban a user from this guild."""
         return await self.gate.exec_req(api.Guild.ban(0, "", self.id, user_id))
+
+    async def find_user_channel(self, user_id: int):
+        """Find which channel a user is currently in within this guild."""
+        return await self.gate.exec_req(api.Channel.which_user(user_id, self.id))

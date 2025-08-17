@@ -255,12 +255,18 @@ class Channel:
         """Move users from one voice channel to another."""
         pass
 
+    @classmethod
+    @req('GET', '/which_user')
+    def which_user(cls, to_user_id, room_id):
+        """Find which channel a user is currently in."""
+        pass
+
 
 class Guild:
     base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/room'
 
     @classmethod
-    @req('GET', '/view', query_params=['room_id'])
+    @req('GET', '/view')
     def view(cls, room_id):
         """Get detailed guild information including channels, roles, and members."""
         pass

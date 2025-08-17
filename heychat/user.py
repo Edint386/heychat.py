@@ -38,3 +38,7 @@ class User:
             req = api.UserMessage.send(self.id, msg_type, str(content), **kwargs)
             
         return await self.gate.exec_req(req)
+
+    async def find_current_channel(self, room_id: str):
+        """Find which channel this user is currently in."""
+        return await self.gate.exec_req(api.Channel.which_user(self.id, room_id))

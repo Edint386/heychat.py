@@ -77,6 +77,10 @@ class Client:
             user_ids = [user_ids]
         return await self.gate.exec_req(api.Channel.move_user(origin_channel_id, user_ids, room_id, target_channel_id))
 
+    async def find_user_channel(self, user_id: int, room_id: str):
+        """Find which channel a user is currently in."""
+        return await self.gate.exec_req(api.Channel.which_user(user_id, room_id))
+
 
     #guild related
     async def fetch_guild(self, guild_id):
