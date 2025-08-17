@@ -272,6 +272,12 @@ class ChannelStream:
         """开始向语音频道推流。"""
         pass
 
+    @classmethod
+    @req('POST', '/stop')
+    def stop_stream(cls, task_id):
+        """停止语音频道推流。"""
+        pass
+
 
 class Guild:
     base_url: str = 'https://chat.xiaoheihe.cn/chatroom/v2/room'

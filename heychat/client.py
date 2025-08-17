@@ -87,7 +87,7 @@ class Client:
         """开始向语音频道推流。
         
         Args:
-            max_duration: 最大播放时长（分钟）。设置后会自动将repeat_num设为-1进行循环播放。
+            max_duration: 最大播放时长（分钟），范围[1, 10080]。设置后会自动将repeat_num设为-1进行循环播放。
         """
         # 当有max_duration时自动把repeat_num设为-1
         if max_duration is not None:
@@ -98,6 +98,10 @@ class Client:
             seek_second, repeat_num, max_duration))
         
         return result['task_id']
+
+    async def stop_stream(self, task_id: str):
+        """停止语音频道推流。"""
+        return await self.gate.exec_req(api.ChannelStream.stop_stream(task_id))
 
 
     #guild related
