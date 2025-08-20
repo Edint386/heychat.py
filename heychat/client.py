@@ -79,7 +79,11 @@ class Client:
 
     async def find_user_channel(self, user_id: int, room_id: str):
         """Find which channel a user is currently in."""
-        return await self.gate.exec_req(api.Channel.which_user(user_id, room_id))
+        return str((await self.gate.exec_req(api.Channel.which_user(user_id, room_id)))['channel_id'])
+
+    async def find_user_voice_channel(self, user_id: int, room_id: str):
+        """Find which voice channel a user is currently in."""
+        return str((await self.gate.exec_req(api.Channel.which_user(user_id, room_id, must_audio=True)))['channel_id'])
 
     async def start_stream(self, room_id: str, channel_id: str, stream_url: str, operator: int = 18661718, 
                           volume: int = 100, seek_second: Optional[int] = None, 

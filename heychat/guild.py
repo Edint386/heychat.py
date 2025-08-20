@@ -72,4 +72,8 @@ class Guild:
 
     async def find_user_channel(self, user_id: int):
         """Find which channel a user is currently in within this guild."""
-        return await self.gate.exec_req(api.Channel.which_user(user_id, self.id))
+        return str((await self.gate.exec_req(api.Channel.which_user(user_id, self.id)))['channel_id'])
+
+    async def find_user_voice_channel(self, user_id: int):
+        """Find which voice channel a user is currently in within this guild."""
+        return str((await self.gate.exec_req(api.Channel.which_user(user_id, self.id, must_audio=True)))['channel_id'])

@@ -257,7 +257,7 @@ class Channel:
 
     @classmethod
     @req('GET', '/which_user')
-    def which_user(cls, to_user_id, room_id):
+    def which_user(cls, to_user_id: int, room_id: str, must_audio=False):
         """Find which channel a user is currently in."""
         pass
 

@@ -41,4 +41,8 @@ class User:
 
     async def find_current_channel(self, room_id: str):
         """Find which channel this user is currently in."""
-        return await self.gate.exec_req(api.Channel.which_user(self.id, room_id))
+        return str((await self.gate.exec_req(api.Channel.which_user(self.id, room_id)))['channel_id'])
+
+    async def find_current_voice_channel(self, room_id: str):
+        """Find which voice channel this user is currently in."""
+        return str((await self.gate.exec_req(api.Channel.which_user(self.id, room_id, must_audio=True)))['channel_id'])
